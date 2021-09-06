@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HelloJM!</title>
+  <link rel="stylesheet" href="./css/base.css">
+  <script src="./lib/init-canvas.js"></script>
+  <script src="./lib/set-bg.js"></script>
+  <script src="./dom/axis-tips.js"></script>
+  <script src="./lib/axis.js"></script>
+  <script src="./dom/draw.js"></script>
+  <script src="./util/animate.js"></script>
+  <script src="./src/matrix.js"></script>
+</head>
+<body>
+  <div class="box">
+    <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
+  </div>
+  <script>
+    window.onload = function () {
+      console.log('window load ok, start js!!!');
+      const printerSize = [680, 480];
+      const [context, canvas] = window.initCanvas('brick-app', printerSize[0], printerSize[1]);
+      // add dom
+      window.addTips(canvas);
+      window.setBackground(context, '#000000');
+      window.createAxis(context);
+      // const draws = window.draw(context);
+      const startLeft = [-300 , -100];
+      const matrixLeft = [112,2,3,4,512,6,7,8,-909];
+      const startRight = [60 , -100];
+      const matrixRight = [100,200,300,400,500,600,700,800,900];
+      const startReturn = [-250, 100];
+      const [result, resultStr] = calculate3(matrixLeft, matrixRight);
+
+      const [leftMatrix] = window.drawMatrix(canvas, startLeft, matrixLeft);
+      const [rightMatrix] = window.drawMatrix(canvas, startRight, matrixRight);
+      const [resultMatrix] = window.drawMatrix(canvas, startReturn, resultStr);
+      const allMatrix = [leftMatrix, rightMatrix, resultMatrix];
+
+      const item = leftMatrix[0];
+      window.animateFrame(function() {
+        if (item.x >= -100 || item.y >= 100) {
+          return;
+        }
+        item.x += 2.7;
+        item.y += 2;
+      });
+
+      window.animateFrame(function (e) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        window.setBackground(context, '#000000');
+        window.createAxis(context);
+        // draws(context);
+        window.drawMatrix(canvas, startLeft, matrixLeft)
+        window.drawMatrix(canvas, startRight,matrixRight)
+
+        // draw 
+        allMatrix.forEach((arr) => {
+          arr.forEach((item) => {
+            drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
+          });
+        });
+        drawText(context, '#f44336', item.text, [item.x, item.y]);
+      });
+    }
+
+    function calculate3(arrLeft, arrRight) {
+      if (arrLeft.length !== arrRight.length) return;
+      const result = [];
+      const resultStr = [];
+      arrLeft.forEach(function (item, index) {
+        result.push(item * arrRight[index])
+        resultStr.push(`${item} * ${arrRight[index]}`);
+      });
+      return [result, resultStr];
+    }
+
+    function drawText(ctx, color, text, position) {
+      const textSize = 32;
+      const dom = ctx.canvas;
+      const domWidth = dom.width;
+      const domHeight = dom.height;
+      const centerX = domWidth / 2;
+      const centerY = domHeight / 2;
+      const [x, y] = position;
+
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.font = `${textSize}px serif`;
+      ctx.fillStyle = color;
+
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    // 获取斜率
+    function activePath(start, end) {
+      const [startX, starY] = start;
+      const [endX, endY] = end;
+      if (endY === startY && endX === startX) return [0, 0, 0];
+      if (endX === startX) return [0, 0, endY - startY];
+      if (endY === startY) return [0, endX - startX, 0];
+      return [(endY - startY) / (endX - startX), 0, 0];
+    }
+
+
+  </script>
+</body>
+</html>

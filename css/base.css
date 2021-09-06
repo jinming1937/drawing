@@ -1,0 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+body {
+  text-align: center;
+}
+.box {
+  line-height: 0;
+  display: inline-block;
+  position: relative;
+}

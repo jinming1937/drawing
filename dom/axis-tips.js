@@ -57,5 +57,5 @@
       div.style.display = 'none';
     });
   }
-  w.addTips = addTips;
+  w.axisTips = addTips;
 }(window));

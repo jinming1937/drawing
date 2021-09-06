@@ -68,5 +68,5 @@
     ctx.restore();
   }
 
-  window.draw = draw;
+  window.mouseDrawLine = draw;
 }(window));

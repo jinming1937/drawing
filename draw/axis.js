@@ -6,7 +6,7 @@
    * @param {String} x x axis string x, s etc...
    * @param {String} y y axis string x, t etc...
    */
-  function createAxis(ctx, needOriginPoint = false, x = 'x', y = 'y') {
+  function drawAxis(ctx, needOriginPoint = false, x = 'x', y = 'y') {
     const centerX = ctx.canvas.width / 2;
     const centerY = ctx.canvas.height / 2;
     const halfLine = 450; // 半线长
@@ -52,5 +52,5 @@
     ctx.restore();
   }
 
-  w.createAxis = createAxis;
+  w.drawAxis = drawAxis;
 }(window));

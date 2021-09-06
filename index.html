@@ -18,6 +18,8 @@
   <script src="./draw/line.js"></script>
   <!-- 鼠标画线 -->
   <script src="./dom/mouse-draw.js"></script>
+  <!-- 导出 -->
+  <script src="./dom/export-picture.js"></script>
   <!-- request animate frame -->
   <script src="./util/animate.js"></script>
   <!-- 计算矩阵x乘 -->
@@ -40,6 +42,7 @@
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
   <div>
+    <input type="button" id="export-picture" value="export picture">
     <label>
       line:
       <input type="radio" name="shape" id="line" value="line" checked>
@@ -55,6 +58,7 @@
         initCanvas,
         mouseDraw,
         initKey,
+        initExport,
         // draw
         drawAxis,
         setBackground,
@@ -79,6 +83,7 @@
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
       drawAxis(context);
+      initExport(canvas);
       mouseDraw(context); // 绑定
 
       const startLeft = [-300 , -100];

@@ -14,18 +14,24 @@
   <script src="./draw/bg.js"></script>
   <!-- 画坐标 -->
   <script src="./draw/axis.js"></script>
+  <!-- 画线段 -->
+  <script src="./draw/line.js"></script>
   <!-- 鼠标画线 -->
   <script src="./dom/mouse-draw-line.js"></script>
   <!-- request animate frame -->
   <script src="./util/animate.js"></script>
-  <!-- 计算矩阵 -->
+  <!-- 计算矩阵x乘 -->
   <script src="./lib/calculate.js"></script>
   <!-- 计算矩阵坐标 -->
   <script src="./lib/calc-matrix.js"></script>
   <!-- 转化坐标 -->
   <script src="./lib/translate-axis.js"></script>
+  <!-- 求斜率 -->
+  <script src="./lib/active-path.js"></script>
   <!-- 画文本 -->
   <script src="./draw/text.js"></script>
+  <!-- 初始化键盘事件 -->
+  <script src="./dom/init-key.js"></script>
 </head>
 <body>
   <div class="box">
@@ -33,28 +39,73 @@
   </div>
   <script>
     window.onload = function () {
+      const {
+        // dom
+        axisTips,
+        initCanvas,
+        mouseDrawLine,
+        initKey,
+        // draw
+        drawAxis,
+        setBackground,
+        drawText,
+        drawLine,
+        // global
+        lines,
+        // lib
+        activePath,
+        calcMatrix,
+        calculate3,
+        translateAxis,
+        // util
+        animateFrame,
+      } = window;
       console.log('window load ok, start js!!!');
+
       const printerSize = [680, 480];
-      const [context, canvas] = window.initCanvas('brick-app', printerSize[0], printerSize[1]);
-      // add dom
-      window.axisTips(canvas);
-      window.setBackground(context, '#000000'); // bg
-      window.drawAxis(context);
-      // const draws = window.draw(context);
+      const [context, canvas] = initCanvas('brick-app', printerSize[0], printerSize[1]);
+      axisTips(canvas);
+      setBackground(context, '#000000'); // bg
+      drawAxis(context);
+      mouseDrawLine(context); // 绑定
+
       const startLeft = [-300 , -100];
       const matrixLeft = [112,2,3,4,512,6,7,8,-909];
       const startRight = [60 , -100];
       const matrixRight = [100,200,300,400,500,600,700,800,900];
       const startReturn = [-600, 100];
       const [result, resultStr] = calculate3(matrixLeft, matrixRight);
+      const [leftMatrix] = calcMatrix(startLeft, matrixLeft, context);
+      const [rightMatrix] = calcMatrix(startRight, matrixRight, context);
+      const [resultMatrix] = calcMatrix(startReturn, resultStr, context);
+      const startR = [-200, 300];
+      const [resultM] = calcMatrix(startR, result, context);
+      const allMatrix = [leftMatrix, rightMatrix, resultMatrix, resultM];
 
-      const [leftMatrix] = window.drawMatrix(startLeft, matrixLeft, context);
-      const [rightMatrix] = window.drawMatrix(startRight, matrixRight, context);
-      const [resultMatrix] = window.drawMatrix(startReturn, resultStr, context);
-      const allMatrix = [leftMatrix, rightMatrix, resultMatrix];
+      {
+        // 画线的前进、后退
+        const cache = [];
+        initKey(function(action) {
+          switch(action) {
+            case 'back':
+              // command + z, 执行
+              if (lines.length > 0) {
+                const ele = lines.pop();
+                if (ele) cache.push(ele);
+              }
+              break;
+            case 'forward':
+              if (cache.length > 0) {
+                const ele = cache.pop();
+                if (ele) lines.push(ele);
+              }
+              break;
+          }
+        });
+      }
 
       const item = leftMatrix[0];
-      window.animateFrame(function() {
+      animateFrame(function() {
         if (item.x >= -100 || item.y >= 100) {
           return;
         }
@@ -62,28 +113,18 @@
         item.y += 2;
       });
 
-      window.animateFrame(function (e) {
+      animateFrame(function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
-        window.setBackground(context, '#000000');
-        window.drawAxis(context);
-        // draw 
+        setBackground(context, '#000000');
+        drawAxis(context);
         allMatrix.forEach((arr) => {
           arr.forEach((item) => {
-            window.drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
+            drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
           });
         });
-        window.drawText(context, '#f44336', item.text, [item.x, item.y]);
+        drawText(context, '#f44336', item.text, [item.x, item.y]);
+        drawLine(context, lines);
       });
-    }
-
-    // 获取斜率
-    function activePath(start, end) {
-      const [startX, starY] = start;
-      const [endX, endY] = end;
-      if (endY === startY && endX === startX) return [0, 0, 0];
-      if (endX === startX) return [0, 0, endY - startY];
-      if (endY === startY) return [0, endX - startX, 0];
-      return [(endY - startY) / (endX - startX), 0, 0];
     }
   </script>
 </body>

@@ -6,7 +6,7 @@
    * @param {Array} lines line array
    * @returns 
    */
-   function drawLine(ctx, lines) {
+   function drawLine(ctx, color, lines) {
     if (lines.length < 0) return;
     const dom = ctx.canvas;
     const domWidth = dom.width;
@@ -20,7 +20,7 @@
       ctx.moveTo(item[0], item[1]);
       ctx.lineTo(item[2], item[3]);
     })
-    ctx.strokeStyle = '#f5f5f5';
+    ctx.strokeStyle = color; // '#f5f5f5';
     ctx.closePath();
     ctx.stroke();
     ctx.restore();

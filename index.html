@@ -17,7 +17,7 @@
   <!-- 画线段 -->
   <script src="./draw/line.js"></script>
   <!-- 鼠标画线 -->
-  <script src="./dom/mouse-draw-line.js"></script>
+  <script src="./dom/mouse-draw.js"></script>
   <!-- request animate frame -->
   <script src="./util/animate.js"></script>
   <!-- 计算矩阵x乘 -->
@@ -30,6 +30,8 @@
   <script src="./lib/active-path.js"></script>
   <!-- 画文本 -->
   <script src="./draw/text.js"></script>
+  <!-- 画框 -->
+  <script src="./draw/rect.js"></script>
   <!-- 初始化键盘事件 -->
   <script src="./dom/init-key.js"></script>
 </head>
@@ -37,21 +39,31 @@
   <div class="box">
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
+  <div>
+    <label>
+      line:
+      <input type="radio" name="shape" id="line" value="line" checked>
+      rect:
+      <input type="radio" name="shape" id="rect" value="rect">
+    </label>
+  </div>
   <script>
     window.onload = function () {
       const {
         // dom
         axisTips,
         initCanvas,
-        mouseDrawLine,
+        mouseDraw,
         initKey,
         // draw
         drawAxis,
         setBackground,
         drawText,
         drawLine,
+        drawRect,
         // global
         lines,
+        rects,
         // lib
         activePath,
         calcMatrix,
@@ -67,12 +79,12 @@
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
       drawAxis(context);
-      mouseDrawLine(context); // 绑定
+      mouseDraw(context); // 绑定
 
       const startLeft = [-300 , -100];
-      const matrixLeft = [112,2,3,4,512,6,7,8,-909];
+      const matrixLeft = [15,2,3,4,29,16,7,8,-14];
       const startRight = [60 , -100];
-      const matrixRight = [100,200,300,400,500,600,700,800,900];
+      const matrixRight = [12,8,31,22,12,10,19,29,17];
       const startReturn = [-600, 100];
       const [result, resultStr] = calculate3(matrixLeft, matrixRight);
       const [leftMatrix] = calcMatrix(startLeft, matrixLeft, context);
@@ -104,14 +116,14 @@
         });
       }
 
-      const item = leftMatrix[0];
-      animateFrame(function() {
-        if (item.x >= -100 || item.y >= 100) {
-          return;
-        }
-        item.x += 2.7;
-        item.y += 2;
-      });
+      // const item = leftMatrix[0];
+      // animateFrame(function() {
+      //   if (item.x >= -100 || item.y >= 100) {
+      //     return;
+      //   }
+      //   item.x += 2.7;
+      //   item.y += 2;
+      // });
 
       animateFrame(function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -122,8 +134,9 @@
             drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
           });
         });
-        drawText(context, '#f44336', item.text, [item.x, item.y]);
-        drawLine(context, lines);
+        // drawText(context, '#f44336', item.text, [item.x, item.y]);
+        drawLine(context, '#f5f5f5', lines);
+        drawRect(context, '#f44336', rects);
       });
     }
   </script>

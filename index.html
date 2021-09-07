@@ -42,7 +42,7 @@
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
   <div>
-    <input type="button" id="export-picture" value="export picture">
+    <input type="button" id="export-picture" class="btn" value="export picture">
     <label>
       line:
       <input type="radio" name="shape" id="line" value="line" checked>
@@ -134,11 +134,11 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
         setBackground(context, '#000000');
         drawAxis(context);
-        allMatrix.forEach((arr) => {
-          arr.forEach((item) => {
-            drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
-          });
-        });
+        // allMatrix.forEach((arr) => {
+        //   arr.forEach((item) => {
+        //     drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
+        //   });
+        // });
         // drawText(context, '#f44336', item.text, [item.x, item.y]);
         drawLine(context, '#f5f5f5', lines);
         drawRect(context, '#f44336', rects);

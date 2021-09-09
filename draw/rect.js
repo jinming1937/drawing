@@ -9,9 +9,9 @@
     ctx.save();
     ctx.translate(axisX, axisY);
     ctx.strokeStyle = color;
-    rects.forEach((item) => {
-      ctx.strokeRect(item[0], item[1], item[2], item[3]);
-    });
+    // rects.forEach((item) => {
+      ctx.strokeRect(rects[0], rects[1], rects[2], rects[3]);
+    // });
     ctx.restore();
   }
 

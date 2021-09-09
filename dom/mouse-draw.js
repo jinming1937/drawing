@@ -1,6 +1,5 @@
 ;(function(w) {
-  w.lines = [];
-  w.rects = [];
+  w.drawData = [];
 
   /**
    * 绑定事件 & 返回绘画函数
@@ -17,41 +16,37 @@
 
     const typeDom = document.getElementById('line');
     
-    const lines = w.lines;
-    const rects = w.rects;
-    let currentLineIndex = lines.length;
-    let currentRectIndex = rects.length;
+    let currentIndex = 0;
     dom.addEventListener('mousedown', (e) => {
       const type = typeDom.checked ? 'line' : 'rect';
+      currentIndex = drawData.length;
+      const shape = [];
       switch(type) {
         case 'line':
-          currentLineIndex = lines.length;
-          lines.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+          shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
           break;
         case 'rect':
-          currentRectIndex = rects.length;
-          rects.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+          shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
           break;
-      }
-
-    });
+        }
+        w.drawData.push({type, shape});
+      });
   
     dom.addEventListener('mousemove', (e) => {
       const type = typeDom.checked ? 'line' : 'rect';
+      const current = w.drawData[currentIndex];
+      if (!current || current.shape.length === 0) {
+        return;
+      }
       switch(type) {
         case 'line':
-          if (!lines[currentLineIndex] || lines[currentLineIndex].length === 0) { // 没有点击开始
-            return;
-          }
-          lines[currentLineIndex][2] = e.layerX * 2 - axisX;
-          lines[currentLineIndex][3] = e.layerY * 2 - axisY;
+          w.drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
+          w.drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
           break;
         case 'rect':
-          if (!rects[currentRectIndex] || rects[currentRectIndex].length === 0) { // 没有点击开始
-            return;
-          }
-          rects[currentRectIndex][2] = Math.abs(e.layerX * 2 - axisX - rects[currentRectIndex][0]);
-          rects[currentRectIndex][3] = Math.abs(e.layerY * 2 - axisY - rects[currentRectIndex][1]);
+          const shape = w.drawData[currentIndex].shape;
+          w.drawData[currentIndex].shape[2] = Math.abs(e.layerX * 2 - axisX - shape[0]);
+          w.drawData[currentIndex].shape[3] = Math.abs(e.layerY * 2 - axisY - shape[1]);
           break;
       }
     });
@@ -60,17 +55,16 @@
       const type = typeDom.checked ? 'line' : 'rect';
       switch(type) {
         case 'line':
-          lines[currentLineIndex][2] = e.layerX * 2 - axisX;
-          lines[currentLineIndex][3] = e.layerY * 2 - axisY;
-          currentLineIndex = lines.length; // 本次绘画结束，index 前移
+          w.drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
+          w.drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
           break;
         case 'rect':
-          rects[currentRectIndex][2] = Math.abs(e.layerX * 2 - axisX - rects[currentRectIndex][0]);
-          rects[currentRectIndex][3] = Math.abs(e.layerY * 2 - axisY - rects[currentRectIndex][1]);
-          currentRectIndex = rects.length; // 本次绘画结束，index 前移
+          const shape = w.drawData[currentIndex].shape;
+          w.drawData[currentIndex].shape[2] = Math.abs(e.layerX * 2 - axisX - shape[0]);
+          w.drawData[currentIndex].shape[3] = Math.abs(e.layerY * 2 - axisY - shape[1]);
           break;
       }
-      
+      currentIndex = w.drawData.length;
     });
   }
 

@@ -41,7 +41,7 @@
   <div class="box">
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
-  <div>
+  <div class="tool">
     <input type="button" id="export-picture" class="btn" value="export picture">
     <label>
       line:
@@ -66,8 +66,7 @@
         drawLine,
         drawRect,
         // global
-        lines,
-        rects,
+        drawData,
         // lib
         activePath,
         calcMatrix,
@@ -78,7 +77,9 @@
       } = window;
       console.log('window load ok, start js!!!');
 
-      const printerSize = [680, 480];
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const printerSize = [width, height];
       const [context, canvas] = initCanvas('brick-app', printerSize[0], printerSize[1]);
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
@@ -106,15 +107,15 @@
           switch(action) {
             case 'back':
               // command + z, 执行
-              if (lines.length > 0) {
-                const ele = lines.pop();
-                if (ele) cache.push(ele);
+              if (drawData.length > 0) {
+                const shape = drawData.pop();
+                if (shape) cache.push(shape);
               }
               break;
             case 'forward':
               if (cache.length > 0) {
-                const ele = cache.pop();
-                if (ele) lines.push(ele);
+                const shape = cache.pop();
+                if (shape) drawData.push(shape);
               }
               break;
           }
@@ -140,8 +141,16 @@
         //   });
         // });
         // drawText(context, '#f44336', item.text, [item.x, item.y]);
-        drawLine(context, '#f5f5f5', lines);
-        drawRect(context, '#f44336', rects);
+        drawData.forEach((item) => {
+          switch(item.type) {
+            case 'line':
+              drawLine(context, '#f5f5f5', item.shape);
+              break;
+            case 'rect':
+              drawRect(context, '#f44336', item.shape);
+              break;
+          }
+        })
       });
     }
   </script>

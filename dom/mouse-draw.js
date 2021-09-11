@@ -17,7 +17,9 @@
     const typeDom = document.getElementById('line');
     
     let currentIndex = 0;
+    let drawing = false;
     dom.addEventListener('mousedown', (e) => {
+      drawing = true;
       const type = typeDom.checked ? 'line' : 'rect';
       currentIndex = drawData.length;
       const shape = [];
@@ -33,6 +35,7 @@
       });
   
     dom.addEventListener('mousemove', (e) => {
+      if (!drawing) return;
       const type = typeDom.checked ? 'line' : 'rect';
       const current = w.drawData[currentIndex];
       if (!current || current.shape.length === 0) {
@@ -52,6 +55,7 @@
     });
   
     dom.addEventListener('mouseup', (e) => {
+      if (!drawing) return;
       const type = typeDom.checked ? 'line' : 'rect';
       switch(type) {
         case 'line':

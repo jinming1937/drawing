@@ -135,11 +135,11 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
         setBackground(context, '#000000');
         drawAxis(context);
-        // allMatrix.forEach((arr) => {
-        //   arr.forEach((item) => {
-        //     drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
-        //   });
-        // });
+        allMatrix.forEach((arr) => {
+          arr.forEach((item) => {
+            drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
+          });
+        });
         // drawText(context, '#f44336', item.text, [item.x, item.y]);
         drawData.forEach((item) => {
           switch(item.type) {

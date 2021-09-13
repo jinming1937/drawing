@@ -9,14 +9,39 @@
    * movement: 移动方向判断 [-1,0,1], →:1, ←:-1, ↓:1, ↑:-1
   */
 
+  const BLANK_WIDTH = 130;
+  const ID = 'sub-tips';
+
+  function show(div) {
+    div.style.display = 'block';
+  }
+
+  function move(div, e, axisX, axisY, needAllInfo) {
+    div.style.left = e.layerX < (BLANK_WIDTH + 10) && e.layerY < BLANK_WIDTH ? `${axisX - BLANK_WIDTH}px` : 0;
+    const baseInfo =
+      `axis: [${e.layerX * 2 - axisX}, ${-e.layerY * 2 + axisY}]
+      canvas: [${e.layerX * 2}, ${e.layerY * 2}]
+      layer: [${e.layerX}, ${e.layerY}]`;
+
+    const info = `offset: [${e.offsetX}, ${e.offsetY}]
+      client:[${e.clientX}, ${e.clientY}]
+      page: [${e.pageX}, ${e.pageY}]
+      xy: [${e.x}, ${e.y}]
+      screen: [${e.screenX}, ${e.screenY}]
+      movement: [${e.movementX}, ${e.movementY}]`;
+    div.innerText = baseInfo + (needAllInfo ? info : '');
+  }
+
+  function hide (div) {
+    div.style.display = 'none';
+  }
+
   /**
    * cursor position info tips
    * @param {DocumentElement} dom canvas element
    * @param {Boolean} needAllInfo need show all cursor position info
    */
   function addTips(dom, needAllInfo = false) {
-    const ID = 'sub-tips';
-    const BLANK_WIDTH = 130;
     const div = document.createElement('div');
     const domWidth = dom.width;
     const domHeight = dom.height;
@@ -36,25 +61,13 @@
     // div.appendChild(_text);
     dom.parentNode.appendChild(div);
     dom.addEventListener('mouseover', (e) => {
-      div.style.display = 'block';
+      show(div);
     });
     dom.addEventListener('mousemove', (e) => {
-      div.style.left = e.layerX < (BLANK_WIDTH + 10) && e.layerY < BLANK_WIDTH ? `${axisX - BLANK_WIDTH}px` : 0;
-      const baseInfo =
-        `axis: [${e.layerX * 2 - axisX}, ${-e.layerY * 2 + axisY}]
-        canvas: [${e.layerX * 2}, ${e.layerY * 2}]
-        layer: [${e.layerX}, ${e.layerY}]`;
-
-      const info = `offset: [${e.offsetX}, ${e.offsetY}]
-        client:[${e.clientX}, ${e.clientY}]
-        page: [${e.pageX}, ${e.pageY}]
-        xy: [${e.x}, ${e.y}]
-        screen: [${e.screenX}, ${e.screenY}]
-        movement: [${e.movementX}, ${e.movementY}]`;
-      div.innerText = baseInfo + (needAllInfo ? info : '');
+      move(div, e, axisX, axisY, needAllInfo)
     });
     dom.addEventListener('mouseout', (e) => {
-      div.style.display = 'none';
+      hide(div);
     });
   }
   w.axisTips = addTips;

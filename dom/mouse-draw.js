@@ -2,8 +2,10 @@
   w.drawData = [];
   let currentIndex = 0;
 
-  function start(typeDom, e, axisX, axisY) {
+  function start(typeDom, colorDom, lineWidthDom, e, axisX, axisY) {
     const type = typeDom.checked ? 'line' : 'rect';
+    const color = `${colorDom.value || '#ffffff'}`;
+    const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
     currentIndex = drawData.length;
     const shape = [];
     switch(type) {
@@ -14,7 +16,7 @@
         shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
         break;
     }
-    w.drawData.push({type, shape});
+    w.drawData.push({type, color, lineWidth, shape});
   }
 
   function move(typeDom, e, axisX, axisY) {
@@ -65,11 +67,13 @@
     const axisX = domWidth / 2;
     const axisY = domHeight / 2;
     const typeDom = document.getElementById('line');
+    const colorDom = document.getElementById('color');
+    const lineWidthDom = document.getElementById('lineWidth');
 
     let drawing = false;
     dom.addEventListener('mousedown', (e) => {
       drawing = true;
-      start(typeDom, e, axisX, axisY);
+      start(typeDom, colorDom, lineWidthDom, e, axisX, axisY);
     });
   
     dom.addEventListener('mousemove', (e) => {

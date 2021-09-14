@@ -1,5 +1,5 @@
 ;(function(w) {
-  function drawRect(ctx, color, rects) {
+  function drawRect(ctx, color, lineWidth, rects) {
     if (rects.length < 0) return;
     const dom = ctx.canvas;
     const domWidth = dom.width;
@@ -9,6 +9,7 @@
     ctx.save();
     ctx.translate(axisX, axisY);
     ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
     // rects.forEach((item) => {
       ctx.strokeRect(rects[0], rects[1], rects[2], rects[3]);
     // });

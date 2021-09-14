@@ -49,6 +49,12 @@
       rect:
       <input type="radio" name="shape" id="rect" value="rect">
     </label>
+    <input type="color" value="#ffffff" name="color" id="color">
+    <select name="line-width" id="lineWidth" >
+      <option value="1">---- 1px</option>
+      <option value="2">==== 2px</option>
+      <option value="3">≡≡≡≡ 3px</option>
+    </select>
   </div>
   <script>
     window.onload = function () {
@@ -83,7 +89,7 @@
       const [context, canvas] = initCanvas('brick-app', printerSize[0], printerSize[1]);
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
-      drawAxis(context);
+      // drawAxis(context);
       initExport(canvas);
       mouseDraw(context); // 绑定
 
@@ -134,20 +140,21 @@
       animateFrame(function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
         setBackground(context, '#000000');
-        drawAxis(context);
-        allMatrix.forEach((arr) => {
-          arr.forEach((item) => {
-            drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
-          });
-        });
+        // drawAxis(context);
+        // allMatrix.forEach((arr) => {
+        //   arr.forEach((item) => {
+        //     drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
+        //   });
+        // });
         // drawText(context, '#f44336', item.text, [item.x, item.y]);
         drawData.forEach((item) => {
-          switch(item.type) {
+          const {type, color, lineWidth, shape} = item;
+          switch(type) {
             case 'line':
-              drawLine(context, '#f5f5f5', item.shape);
+              drawLine(context, color, lineWidth, shape);
               break;
             case 'rect':
-              drawRect(context, '#f44336', item.shape);
+              drawRect(context, color, lineWidth, shape);
               break;
           }
         })

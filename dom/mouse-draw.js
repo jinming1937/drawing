@@ -2,30 +2,33 @@
   w.drawData = [];
   let currentIndex = 0;
 
+  function getType() {
+    const [line, rect, pan] = document.querySelectorAll('input[name="shape"]');
+    if(line.checked) return 'line';
+    if(rect.checked) return 'rect';
+    if(pan.checked) return 'pan';
+  }
+
   function start(colorDom, lineWidthDom, e, axisX, axisY) {
-    const typeDom = document.querySelector('input[name="shape"][checked]');
-    const type = typeDom.value;
+    const type = getType();
     const color = `${colorDom.value || '#ffffff'}`;
     const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
     currentIndex = drawData.length;
     const shape = [];
     switch(type) {
       case 'line':
-        shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
-        break;
       case 'rect':
         shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
         break;
       case 'pan':
-        shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
+        shape.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
         break;
     }
     w.drawData.push({type, color, lineWidth, shape});
   }
 
   function move(e, axisX, axisY) {
-    const typeDom = document.querySelector('input[name="shape"][checked]');
-    const type = typeDom.value;
+    const type = getType();
     const current = w.drawData[currentIndex];
     if (!current || current.shape.length === 0) {
       return;
@@ -43,15 +46,13 @@
         w.drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
         break;
       case 'pan':
-        shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
+        w.drawData[currentIndex].shape.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
         break;
     }
   }
 
   function end(e, axisX, axisY) {
-    const typeDom = document.querySelector('input[name="shape"][checked]');
-    const type = typeDom.value;
-    console.log(type);
+    const type = getType();
     switch(type) {
       case 'line':
         w.drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
@@ -65,7 +66,7 @@
         w.drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
         break;
       case 'pan':
-        shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
+        w.drawData[currentIndex].shape.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
         break;
     }
     currentIndex = w.drawData.length;

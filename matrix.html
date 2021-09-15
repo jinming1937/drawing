@@ -14,6 +14,8 @@
   <script src="./draw/bg.js"></script>
   <!-- 画坐标 -->
   <script src="./draw/axis.js"></script>
+  <!-- 画线段 -->
+  <script src="./draw/line.js"></script>
   <!-- 鼠标画线 -->
   <script src="./dom/mouse-draw.js"></script>
   <!-- 导出 -->
@@ -28,16 +30,10 @@
   <script src="./lib/translate-axis.js"></script>
   <!-- 求斜率 -->
   <script src="./lib/active-path.js"></script>
-  <!-- 画线段 -->
-  <script src="./draw/line.js"></script>
-  <!-- 画矩形 -->
-  <script src="./draw/line-rect.js"></script>
   <!-- 画文本 -->
   <script src="./draw/text.js"></script>
   <!-- 画框 -->
   <script src="./draw/rect.js"></script>
-  <!-- 画笔 -->
-  <script src="./draw/pan.js"></script>
   <!-- 初始化键盘事件 -->
   <script src="./dom/init-key.js"></script>
 </head>
@@ -52,15 +48,7 @@
       <input type="radio" name="shape" id="line" value="line" checked>
       rect:
       <input type="radio" name="shape" id="rect" value="rect">
-      pan:
-      <input type="radio" name="shape" id="pan" value="pan">
     </label>
-    <input class="color" type="color" value="#ffffff" name="color" id="color">
-    <select class="line-width" name="line-width" id="lineWidth" value="2">
-      <option value="1">----- 1px</option>
-      <option value="2">==== 2px</option>
-      <option value="3">≡≡≡≡ 3px</option>
-    </select>
   </div>
   <script>
     window.onload = function () {
@@ -77,8 +65,6 @@
         drawText,
         drawLine,
         drawRect,
-        drawLineRect,
-        drawPan,
         // global
         drawData,
         // lib
@@ -97,14 +83,14 @@
       const [context, canvas] = initCanvas('brick-app', printerSize[0], printerSize[1]);
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
-      // drawAxis(context);
+      drawAxis(context);
       initExport(canvas);
       mouseDraw(context); // 绑定
 
       const startLeft = [-300 , -100];
-      const matrixLeft = [15,2,3,4,29,16,7,8,-14];
+      const matrixLeft = [9,2,3,4,0,1,7,8,-6];
       const startRight = [60 , -100];
-      const matrixRight = [12,8,31,22,12,10,19,29,17];
+      const matrixRight = [4,8,6,2,7,-2,5,3,9];
       const startReturn = [-600, 100];
       const [result, resultStr] = calculate3(matrixLeft, matrixRight);
       const [leftMatrix] = calcMatrix(startLeft, matrixLeft, context);
@@ -149,23 +135,19 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
         setBackground(context, '#000000');
         drawAxis(context);
-        // allMatrix.forEach((arr) => {
-        //   arr.forEach((item) => {
-        //     drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
-        //   });
-        // });
+        allMatrix.forEach((arr) => {
+          arr.forEach((item) => {
+            drawText(context, '#FFFFFF', item.text, [item.x, item.y]);
+          });
+        });
         // drawText(context, '#f44336', item.text, [item.x, item.y]);
         drawData.forEach((item) => {
-          const {type, color, lineWidth, shape} = item;
-          switch(type) {
+          switch(item.type) {
             case 'line':
-              drawLine(context, color, lineWidth, shape);
+              drawLine(context, '#f5f5f5', item.shape);
               break;
             case 'rect':
-              drawLineRect(context, color, lineWidth, shape);
-              break;
-            case 'pan':
-              drawPan(context, color, lineWidth, shape);
+              drawRect(context, '#f44336', item.shape);
               break;
           }
         })

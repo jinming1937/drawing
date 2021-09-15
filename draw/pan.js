@@ -11,9 +11,9 @@
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
+    ctx.moveTo(lines[0][0], lines[0][1]);
     lines.forEach((item) => {
-      ctx.moveTo(item[0], item[1]);
-      ctx.lineTo(item[2], item[3]);
+      ctx.lineTo(item[0], item[1]);
     });
     ctx.stroke();
     ctx.restore();

@@ -13,10 +13,14 @@
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
-    ctx.lineTo(x1, y2 - y1);
-    ctx.lineTo(x2 - x1, y2 - y1);
-    ctx.lineTo(x2 - x1, y1);
-    ctx.closePath();
+    ctx.lineTo(x1, y2);
+    ctx.lineTo(x2, y2);
+    ctx.lineTo(x2, y1);
+    ctx.lineTo(x1, y1);
+    // 对角线
+    // ctx.moveTo(x1, y1);
+    // ctx.lineTo(x2, y2);
+
     ctx.stroke();
     ctx.restore();
   }

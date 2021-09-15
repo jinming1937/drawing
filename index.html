@@ -14,8 +14,6 @@
   <script src="./draw/bg.js"></script>
   <!-- 画坐标 -->
   <script src="./draw/axis.js"></script>
-  <!-- 画线段 -->
-  <script src="./draw/line.js"></script>
   <!-- 鼠标画线 -->
   <script src="./dom/mouse-draw.js"></script>
   <!-- 导出 -->
@@ -30,10 +28,16 @@
   <script src="./lib/translate-axis.js"></script>
   <!-- 求斜率 -->
   <script src="./lib/active-path.js"></script>
+  <!-- 画线段 -->
+  <script src="./draw/line.js"></script>
+  <!-- 画矩形 -->
+  <script src="./draw/line-rect.js"></script>
   <!-- 画文本 -->
   <script src="./draw/text.js"></script>
   <!-- 画框 -->
   <script src="./draw/rect.js"></script>
+  <!-- 画笔 -->
+  <script src="./draw/pan.js"></script>
   <!-- 初始化键盘事件 -->
   <script src="./dom/init-key.js"></script>
 </head>
@@ -48,6 +52,8 @@
       <input type="radio" name="shape" id="line" value="line" checked>
       rect:
       <input type="radio" name="shape" id="rect" value="rect">
+      pan:
+      <input type="radio" name="shape" id="pan" value="pan">
     </label>
     <input type="color" value="#ffffff" name="color" id="color">
     <select name="line-width" id="lineWidth" >
@@ -71,6 +77,8 @@
         drawText,
         drawLine,
         drawRect,
+        drawLineRect,
+        drawPan,
         // global
         drawData,
         // lib
@@ -154,7 +162,10 @@
               drawLine(context, color, lineWidth, shape);
               break;
             case 'rect':
-              drawRect(context, color, lineWidth, shape);
+              drawLineRect(context, color, lineWidth, shape);
+              break;
+            case 'pan':
+              console.log('pan');
               break;
           }
         })

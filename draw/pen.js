@@ -1,5 +1,5 @@
 ;(function(w) {
-  function drawPan(ctx, color, lineWidth, lines) {
+  function drawPen(ctx, color, lineWidth, lines) {
     if (lines.length < 0) return;
     const dom = ctx.canvas;
     const domWidth = dom.width;
@@ -19,5 +19,5 @@
     ctx.restore();
   }
 
-  w.drawPan = drawPan;
+  w.drawPen = drawPen;
 } (window));

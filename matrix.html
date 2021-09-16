@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HelloJM!</title>
+  <title>Matrix!</title>
   <link rel="stylesheet" href="./css/base.css">
   <!-- 初始化 -->
   <script src="./dom/init-canvas.js"></script>
@@ -14,28 +14,24 @@
   <script src="./draw/bg.js"></script>
   <!-- 画坐标 -->
   <script src="./draw/axis.js"></script>
-  <!-- 画线段 -->
-  <script src="./draw/line.js"></script>
-  <!-- 鼠标画线 -->
-  <script src="./dom/mouse-draw.js"></script>
   <!-- 导出 -->
   <script src="./dom/export-picture.js"></script>
   <!-- request animate frame -->
   <script src="./util/animate.js"></script>
   <!-- 计算矩阵x乘 -->
   <script src="./lib/calculate.js"></script>
+  <!-- 计算矩阵x乘 -->
+  <script src="./lib/cal.js"></script>
   <!-- 计算矩阵坐标 -->
-  <script src="./lib/calc-matrix.js"></script>
+  <script src="./lib/cal-matrix.js"></script>
+  <!-- 计算矩阵坐标 -->
+  <script src="./lib/calculate-matrix.js"></script>
   <!-- 转化坐标 -->
   <script src="./lib/translate-axis.js"></script>
   <!-- 求斜率 -->
   <script src="./lib/active-path.js"></script>
   <!-- 画文本 -->
   <script src="./draw/text.js"></script>
-  <!-- 画框 -->
-  <script src="./draw/rect.js"></script>
-  <!-- 初始化键盘事件 -->
-  <script src="./dom/init-key.js"></script>
 </head>
 <body>
   <div class="box">
@@ -43,12 +39,7 @@
   </div>
   <div class="tool">
     <input type="button" id="export-picture" class="btn" value="export picture">
-    <label>
-      line:
-      <input type="radio" name="shape" id="line" value="line" checked>
-      rect:
-      <input type="radio" name="shape" id="rect" value="rect">
-    </label>
+    <input class="color" type="color" value="#ffffff" name="color" id="color">
   </div>
   <script>
     window.onload = function () {
@@ -56,71 +47,69 @@
         // dom
         axisTips,
         initCanvas,
-        mouseDraw,
-        initKey,
-        initExport,
+        initExportPicture,
         // draw
         drawAxis,
         setBackground,
-        drawText,
-        drawLine,
-        drawRect,
         // global
         drawData,
         // lib
         activePath,
-        calcMatrix,
+        calculateMatrix,
         calculate3,
+        cal,
+        calMatrix,
         translateAxis,
         // util
         animateFrame,
+        // src
       } = window;
       console.log('window load ok, start js!!!');
 
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const printerSize = [width, height];
-      const [context, canvas] = initCanvas('brick-app', printerSize[0], printerSize[1]);
+      const [context, canvas] = initCanvas('brick-app', window.innerWidth, window.innerHeight);
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
-      drawAxis(context);
-      initExport(canvas);
-      mouseDraw(context); // 绑定
+      initExportPicture(canvas); // 导出
 
-      const startLeft = [-300 , -100];
-      const matrixLeft = [9,2,3,4,0,1,7,8,-6];
-      const startRight = [60 , -100];
-      const matrixRight = [4,8,6,2,7,-2,5,3,9];
-      const startReturn = [-600, 100];
-      const [result, resultStr] = calculate3(matrixLeft, matrixRight);
-      const [leftMatrix] = calcMatrix(startLeft, matrixLeft, context);
-      const [rightMatrix] = calcMatrix(startRight, matrixRight, context);
-      const [resultMatrix] = calcMatrix(startReturn, resultStr, context);
-      const startR = [-200, 300];
-      const [resultM] = calcMatrix(startR, result, context);
-      const allMatrix = [leftMatrix, rightMatrix, resultMatrix, resultM];
+      function getNumMatrix(ctx) {
+        const startLeft = [-300 , -100];
+        const matrixLeft = [-3,2,3,-4,4,-2,7,8,-4];
+        const startRight = [60 , -100];
+        const matrixRight = [5,8,-1,2,-6,0,9,8,4];
+        const startReturn = [-600, 100];
+        const [result, resultStr] = calculate3(matrixLeft, matrixRight);
+        const [leftMatrix] = calculateMatrix(startLeft, matrixLeft, ctx);
+        const [rightMatrix] = calculateMatrix(startRight, matrixRight, ctx);
+        const [resultMatrix] = calculateMatrix(startReturn, resultStr, ctx);
+        const startR = [-200, 300];
+        const [resultM] = calculateMatrix(startR, result, ctx);
 
-      {
-        // 画线的前进、后退
-        const cache = [];
-        initKey(function(action) {
-          switch(action) {
-            case 'back':
-              // command + z, 执行
-              if (drawData.length > 0) {
-                const shape = drawData.pop();
-                if (shape) cache.push(shape);
-              }
-              break;
-            case 'forward':
-              if (cache.length > 0) {
-                const shape = cache.pop();
-                if (shape) drawData.push(shape);
-              }
-              break;
-          }
-        });
+        return [leftMatrix, rightMatrix, resultMatrix, resultM];
       }
+
+      function getStrMatrix(ctx) {
+        const startLeft = [-300 , -100];
+        const matrixLeft = [
+          [-3,2,3],
+          [-4,8,1],
+          [9,5,6],
+        ];
+        const startRight = [60 , -100];
+        const matrixRight = [
+          ['x'],
+          ['y'],
+          ['z']
+        ];
+        const startReturn = [-280, 100];
+        const [result, resultStr] = cal(matrixLeft, matrixRight, true);
+        const [leftMatrix] = calMatrix(startLeft, matrixLeft, ctx);
+        const [rightMatrix] = calMatrix(startRight, matrixRight, ctx);
+        const [resultMatrix] = calMatrix(startReturn, resultStr, ctx);
+        return [leftMatrix, rightMatrix, resultMatrix];
+      }
+
+      // const allMatrix = getNumMatrix(context);
+      const allMatrix = getStrMatrix(context);
 
       // const item = leftMatrix[0];
       // animateFrame(function() {
@@ -141,16 +130,6 @@
           });
         });
         // drawText(context, '#f44336', item.text, [item.x, item.y]);
-        drawData.forEach((item) => {
-          switch(item.type) {
-            case 'line':
-              drawLine(context, '#f5f5f5', item.shape);
-              break;
-            case 'rect':
-              drawRect(context, '#f44336', item.shape);
-              break;
-          }
-        })
       });
     }
   </script>

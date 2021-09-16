@@ -15,5 +15,5 @@
     // });
   }
 
-  w.initExport = init;
+  w.initExportPicture = init;
 }(window));

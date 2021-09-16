@@ -3,10 +3,10 @@
   let currentIndex = 0;
 
   function getType() {
-    const [line, rect, pan] = document.querySelectorAll('input[name="shape"]');
+    const [line, rect, pen] = document.querySelectorAll('input[name="shape"]');
     if(line.checked) return 'line';
     if(rect.checked) return 'rect';
-    if(pan.checked) return 'pan';
+    if(pen.checked) return 'pen';
   }
 
   function start(colorDom, lineWidthDom, e, axisX, axisY) {
@@ -20,7 +20,7 @@
       case 'rect':
         shape.push(e.layerX * 2 - axisX, e.layerY * 2 - axisY);
         break;
-      case 'pan':
+      case 'pen':
         shape.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
         break;
     }
@@ -45,7 +45,7 @@
         w.drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
         w.drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
         break;
-      case 'pan':
+      case 'pen':
         w.drawData[currentIndex].shape.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
         break;
     }
@@ -65,7 +65,7 @@
         w.drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
         w.drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
         break;
-      case 'pan':
+      case 'pen':
         w.drawData[currentIndex].shape.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
         break;
     }

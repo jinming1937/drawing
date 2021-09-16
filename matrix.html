@@ -42,6 +42,46 @@
     <input class="color" type="color" value="#ffffff" name="color" id="color">
   </div>
   <script>
+
+    function getNumMatrix(ctx) {
+      const {calculateMatrix, calculate3} = window;
+      const startLeft = [-300 , -100];
+      const matrixLeft = [-3,2,3,-4,4,-2,7,8,-4];
+      const startRight = [60 , -100];
+      const matrixRight = [5,8,-1,2,-6,0,9,8,4];
+      const startReturn = [-600, 100];
+      const [result, resultStr] = calculate3(matrixLeft, matrixRight);
+      const [leftMatrix] = calculateMatrix(startLeft, matrixLeft, ctx);
+      const [rightMatrix] = calculateMatrix(startRight, matrixRight, ctx);
+      const [resultMatrix] = calculateMatrix(startReturn, resultStr, ctx);
+      const startR = [-200, 300];
+      const [resultM] = calculateMatrix(startR, result, ctx);
+
+      return [leftMatrix, rightMatrix, resultMatrix, resultM];
+    }
+
+    function getStrMatrix(ctx) {
+      const {cal, calMatrix} = window;
+      const startLeft = [-300 , -100];
+      const matrixLeft = [
+        [-3,2,3],
+        [-4,8,1],
+        [9,5,6],
+      ];
+      const startRight = [60 , -100];
+      const matrixRight = [
+        ['x'],
+        ['y'],
+        ['z']
+      ];
+      const startReturn = [-280, 100];
+      const [result, resultStr] = cal(matrixLeft, matrixRight, true);
+      const [leftMatrix] = calMatrix(startLeft, matrixLeft, ctx);
+      const [rightMatrix] = calMatrix(startRight, matrixRight, ctx);
+      const [resultMatrix] = calMatrix(startReturn, resultStr, ctx);
+      return [leftMatrix, rightMatrix, resultMatrix];
+    }
+
     window.onload = function () {
       const {
         // dom
@@ -54,15 +94,10 @@
         // global
         drawData,
         // lib
-        activePath,
-        calculateMatrix,
-        calculate3,
-        cal,
-        calMatrix,
-        translateAxis,
+        // activePath,
+        // translateAxis,
         // util
         animateFrame,
-        // src
       } = window;
       console.log('window load ok, start js!!!');
 
@@ -70,43 +105,6 @@
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
       initExportPicture(canvas); // 导出
-
-      function getNumMatrix(ctx) {
-        const startLeft = [-300 , -100];
-        const matrixLeft = [-3,2,3,-4,4,-2,7,8,-4];
-        const startRight = [60 , -100];
-        const matrixRight = [5,8,-1,2,-6,0,9,8,4];
-        const startReturn = [-600, 100];
-        const [result, resultStr] = calculate3(matrixLeft, matrixRight);
-        const [leftMatrix] = calculateMatrix(startLeft, matrixLeft, ctx);
-        const [rightMatrix] = calculateMatrix(startRight, matrixRight, ctx);
-        const [resultMatrix] = calculateMatrix(startReturn, resultStr, ctx);
-        const startR = [-200, 300];
-        const [resultM] = calculateMatrix(startR, result, ctx);
-
-        return [leftMatrix, rightMatrix, resultMatrix, resultM];
-      }
-
-      function getStrMatrix(ctx) {
-        const startLeft = [-300 , -100];
-        const matrixLeft = [
-          [-3,2,3],
-          [-4,8,1],
-          [9,5,6],
-        ];
-        const startRight = [60 , -100];
-        const matrixRight = [
-          ['x'],
-          ['y'],
-          ['z']
-        ];
-        const startReturn = [-280, 100];
-        const [result, resultStr] = cal(matrixLeft, matrixRight, true);
-        const [leftMatrix] = calMatrix(startLeft, matrixLeft, ctx);
-        const [rightMatrix] = calMatrix(startRight, matrixRight, ctx);
-        const [resultMatrix] = calMatrix(startReturn, resultStr, ctx);
-        return [leftMatrix, rightMatrix, resultMatrix];
-      }
 
       // const allMatrix = getNumMatrix(context);
       const allMatrix = getStrMatrix(context);

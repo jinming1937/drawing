@@ -39,14 +39,18 @@
   </div>
   <div class="tool">
     <input type="button" id="export-picture" class="btn" value="export picture">
-    <input type="button" id="export-data" class="btn" value="export data">
+    <input type="button" id="export-data" class="btn" value="export json">
     <label>
       line:
       <input type="radio" name="shape" id="line" value="line" checked>
-      rect:
+      | rect:
       <input type="radio" name="shape" id="rect" value="rect">
-      pen:
+      | pen:
       <input type="radio" name="shape" id="pen" value="pen">
+    </label>
+    <label for="need-axis">
+      | axis?
+      <input type="checkbox" name="need-axis" id="need-axis" checked>
     </label>
     <input class="color" type="color" value="#ffffff" name="color" id="color">
     <select class="line-width" name="line-width" id="lineWidth" value="2">
@@ -84,7 +88,7 @@
         animateFrame,
       } = window;
       console.log('window load ok, start js!!!');
-
+      const needAxis = document.getElementById('need-axis');
       const [context, canvas] = initCanvas('brick-app', window.innerWidth, window.innerHeight);
       axisTips(canvas); // 坐标提示
       setBackground(context, '#000000'); // bg
@@ -117,7 +121,7 @@
       animateFrame(function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
         setBackground(context, '#000000');
-        drawAxis(context);
+        if(needAxis.checked) { drawAxis(context) }
         drawData.forEach((item) => {
           const {type, color, lineWidth, shape} = item;
           switch(type) {

@@ -40,6 +40,10 @@
   <div class="tool">
     <input type="button" id="export-picture" class="btn" value="export picture">
     <input class="color" type="color" value="#ffffff" name="color" id="color">
+    <label for="need-axis">
+      需要坐标轴
+      <input type="checkbox" name="need-axis" id="need-axis" checked>
+    </label>
   </div>
   <script>
 
@@ -100,7 +104,7 @@
         animateFrame,
       } = window;
       console.log('window load ok, start js!!!');
-
+      const needAxis = document.getElementById('need-axis');
       const [context, canvas] = initCanvas('brick-app', window.innerWidth, window.innerHeight);
       axisTips(canvas);
       setBackground(context, '#000000'); // bg
@@ -121,7 +125,7 @@
       animateFrame(function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
         setBackground(context, '#000000');
-        drawAxis(context);
+        if(needAxis.checked) { drawAxis(context) }
         allMatrix.forEach((arr) => {
           arr.forEach((item) => {
             drawText(context, '#FFFFFF', item.text, [item.x, item.y]);

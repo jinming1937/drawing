@@ -6,7 +6,7 @@
    * @param {String} x x axis string x, s etc...
    * @param {String} y y axis string x, t etc...
    */
-  function drawAxis(ctx, needOriginPoint = false, x = 'x', y = 'y') {
+  function drawAxis(ctx, color = '#FFFFFF', needOriginPoint = false, x = 'x', y = 'y') {
     const centerX = ctx.canvas.width / 2;
     const centerY = ctx.canvas.height / 2;
     const halfLine = 450; // 半线长
@@ -14,7 +14,6 @@
     const arrowWidth = arrowHeight / 2; // 箭头宽度
     const textTrans = [5, 25]; // x,y 偏移
     const textSize = 16 * 2; // x,y 字体
-    const color = '#FFFFFF'; // 坐标轴颜色
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.beginPath();

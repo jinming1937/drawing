@@ -9,7 +9,7 @@
   function initInputDom(colorDom) {
     const textarea = document.createElement('textarea');
     textarea.id = 'textarea-input';
-    textarea.style.background = "rgb(255 255 255 / 30%)";
+    textarea.style.background = "rgb(255 255 255 / 70%)";
     textarea.style.position = "absolute";
     textarea.style.left = 0;
     textarea.style.top = 0;
@@ -22,6 +22,7 @@
     textarea.style.resize = 'none';
     textarea.style.width = '150px';
     textarea.style.height = '40px';
+    textarea.style.borderRadius = '2px';
     textarea.style.display = 'none';
     textarea.placeholder = '请输入少于30个字';
 

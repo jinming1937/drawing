@@ -38,9 +38,10 @@
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
   <div class="tool">
-    <input type="button" id="export-picture" class="btn" value="export picture">
-    <input type="button" id="export-data" class="btn" value="export json">
-    <label>
+    <input type="button" id="clear-page" class="btn" value="clear" onclick="window.location.reload()">
+    <input type="button" id="export-picture" class="btn" value="↓ picture">
+    <input type="button" id="export-data" class="btn" value="↓ json">
+    <label class="line">
       line:
       <input type="radio" name="shape" id="line" value="line" checked>
       | rect:
@@ -50,17 +51,26 @@
       | txt:
       <input type="radio" name="shape" id="txt" value="txt">
     </label>
-    <label for="need-axis">
-      | axis?
-      <input type="checkbox" name="need-axis" id="need-axis" checked>
-    </label>
     <input class="color" type="color" value="#ffffff" name="color" id="color">
     <select class="line-width" name="line-width" id="lineWidth" value="2">
       <option value="1">----- 1px</option>
       <option value="2">==== 2px</option>
       <option value="3">≡≡≡≡ 3px</option>
     </select>
-    <input type="button" id="clear-page" class="btn" value="clear" onclick="window.location.reload()">
+    <label class="label-btn" for="need-axis">
+      axis?:
+      <input type="checkbox" name="need-axis" id="need-axis" checked>
+    </label>
+    <select class="line-width"name="theme" id="theme" value="#000000">
+      <option value="cadetblue">cadetblue</option>
+      <option value="steelblue">steelblue</option>
+      <option value="#000000">black</option>
+      <option value="#FFFFFF">white</option>
+      <option value="oldlace">oldlace</option>
+      <option value="gray">gray</option>
+      <option value="blue">blue</option>
+      <option value="green">green</option>
+    </select>
   </div>
   <script>
     window.onload = function () {
@@ -91,14 +101,15 @@
         animateFrame,
       } = window;
       console.log('window load ok, start js!!!');
+      const themeDom = document.getElementById('theme');
       const needAxis = document.getElementById('need-axis');
       const [context, canvas] = initCanvas('brick-app', window.innerWidth, window.innerHeight);
       axisTips(canvas); // 坐标提示
-      setBackground(context, '#000000'); // bg
+      setBackground(context, themeDom.value); // bg
       initExportPicture(canvas); // 绑定导出图片
       initExportData();
       mouseDraw(context); // 绑定事件
-
+      
       {
         // 画线的前进、后退
         const cache = [];
@@ -123,8 +134,8 @@
 
       animateFrame(function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
-        setBackground(context, '#000000');
-        if(needAxis.checked) { drawAxis(context) }
+        setBackground(context, themeDom.value);
+        if(needAxis.checked) { drawAxis(context, '#FFFFFF') }
         drawData.forEach((item) => {
           const {type, color, lineWidth, shape} = item;
           switch(type) {

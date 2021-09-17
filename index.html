@@ -47,6 +47,8 @@
       <input type="radio" name="shape" id="rect" value="rect">
       | pen:
       <input type="radio" name="shape" id="pen" value="pen">
+      | txt:
+      <input type="radio" name="shape" id="txt" value="txt">
     </label>
     <label for="need-axis">
       | axis?
@@ -133,6 +135,9 @@
               break;
             case 'pen':
               drawPen(context, color, lineWidth, shape);
+              break;
+            case 'txt':
+              drawText(context, color, item.text, shape);
               break;
           }
         })

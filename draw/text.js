@@ -1,6 +1,7 @@
 ;(function (w){
   
   function drawText(ctx, color, text, position) {
+    if (!text) return;
     const textSize = 32;
     const dom = ctx.canvas;
     const domWidth = dom.width;

@@ -145,13 +145,13 @@
    * @param {Object} inputDom textarea dom
    */
   function endInput(inputDom) {
-    inputDom.style.display = 'none';
-    inputDom.value = '';
     if (inputDom.value) {
       w.drawData[currentIndex].text = inputDom.value;
     } else {
       w.drawData.pop();
     }
+    inputDom.style.display = 'none';
+    inputDom.value = '';
     currentIndex = w.drawData.length;
   }
 
@@ -188,18 +188,18 @@
       end(e, axisX, axisY);
     });
 
-    const input = []; // 维护文字输入状态，超长禁止输入
+    let input = ''; // 维护文字输入状态，超长禁止输入
     textarea.addEventListener('keydown', (e) => {
       if (input.length > 30 && e.key !== 'Backspace') {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
-      input.push(e.target.value);
+      input = e.target.value;
     });
 
     textareaMask.addEventListener('click', (e) => {
-      input.length = 0;
+      input = '';
       endInput(textarea); // 点击蒙层关闭输入态
       textareaMask.style.display = 'none';
     });

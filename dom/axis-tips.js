@@ -52,7 +52,7 @@
     div.style.top = 0;
     div.style.left = 0;
     div.style.background = 'rgb(88 88 88 / 30%)';
-    div.style.color = '#ababab';
+    div.style.color = '#f1f1f1';
     div.style.fontSize = '12px';
     div.style.width = `${BLANK_WIDTH}px`;
     div.style.lineHeight = '14px';

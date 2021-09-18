@@ -14,7 +14,7 @@ const config: Configuration = {
     main: ['./src/main.less', './src/main.ts']
   },
   output: {
-    library: 'lit',
+    library: 'jinming1937',
     filename: 'static/[name].[chunkhash:8].js',
     publicPath: '',
     // libraryTarget: "var",
@@ -76,17 +76,6 @@ const config: Configuration = {
     ]
   },
   plugins: [
-    // new UglifyjsWebpackPlugin({
-    // 	uglifyOptions: {
-    // 		compress: {
-    // 			//   warnings: false,
-    // 			drop_console: true, //console
-    // 			pure_funcs: ["console.log"], //移除console
-    // 		},
-    // 	},
-    // 	// sourceMap: config.build.productionSourceMap,
-    // 	parallel: true,
-    // }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
@@ -94,7 +83,7 @@ const config: Configuration = {
     }),
 
     new HtmlWebpackPlugin({
-      title: 'Galaxy',
+      title: 'Math',
       filename: 'index.html',
       chunks: ['vendor', 'commons', 'main'],
       template: path.join(__dirname, 'index.html')

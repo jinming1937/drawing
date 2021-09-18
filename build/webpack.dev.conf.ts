@@ -15,7 +15,7 @@ const PORT = 9942
 const config: Configuration = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    main: ['./css/base.less', './src/main.ts']
+    main: ['./src/main.less', './src/main.ts']
   },
   output: {
     filename: 'static/[name].[chunkhash:8].js',

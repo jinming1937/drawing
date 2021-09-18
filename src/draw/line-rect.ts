@@ -1,12 +1,5 @@
-;(function(w) {
 
-  /**
-   * 画线段
-   * @param {Object} ctx canvas context
-   * @param {Array} lines line array
-   * @returns 
-   */
-   function drawLine(ctx, color, lineWidth, lines) {
+export  function drawLineRect(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[]) {
     if (lines.length < 0) return;
     const dom = ctx.canvas;
     const domWidth = dom.width;
@@ -16,15 +9,18 @@
     const [x1, y1, x2, y2] = lines;
     ctx.save();
     ctx.translate(axisX, axisY);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
+    ctx.lineTo(x1, y2);
     ctx.lineTo(x2, y2);
-    ctx.strokeStyle = color; // '#f5f5f5';
-    ctx.lineWidth = lineWidth;
-    ctx.closePath();
+    ctx.lineTo(x2, y1);
+    ctx.lineTo(x1, y1);
+    // 对角线
+    // ctx.moveTo(x1, y1);
+    // ctx.lineTo(x2, y2);
+
     ctx.stroke();
     ctx.restore();
   }
-
-  w.drawLine = drawLine
-}(window));

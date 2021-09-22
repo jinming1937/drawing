@@ -1,5 +1,5 @@
 
-export type IShapeType = 'line' | 'rect' | 'pen' | 'txt';
+export type IShapeType = 'line' | 'rect' | 'pen' | 'txt' | 'arrow';
 
 export type Pen = {
   type: 'pen';
@@ -10,7 +10,7 @@ export type Pen = {
 }
 
 export type Common = {
-  type: 'line' | 'rect';
+  type: 'line' | 'rect' | 'arrow';
   color: string;
   lineWidth: number;
   shape: number[];
@@ -105,6 +105,7 @@ function getType(): IShapeType {
   if((dom[1] as HTMLInputElement).checked) return 'rect';
   if((dom[2] as HTMLInputElement).checked) return 'pen';
   if((dom[3] as HTMLInputElement).checked) return 'txt';
+  if((dom[4] as HTMLInputElement).checked) return 'arrow';
   return 'line';
 }
 
@@ -116,6 +117,7 @@ function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: Mo
   switch(type) {
     case 'line':
     case 'rect':
+    case 'arrow':
       drawData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY]});
       break;
     case 'pen':
@@ -130,15 +132,13 @@ function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: Mo
 function move(e: MouseEvent, axisX: number, axisY: number) {
   const type = getType();
   const current = drawData[currentIndex];
-  if (!current || current.shape.length === 0) {
+  if (!current || (current.shape.length + ((current as Pen).lines?.length || 0)) === 0) {
     return;
   }
   switch(type) {
     case 'line':
-      drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
-      drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
-      break;
     case 'rect':
+    case 'arrow':
       drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
       drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
       break;
@@ -154,10 +154,8 @@ function end(e: MouseEvent, axisX: number, axisY: number) {
   const type = getType();
   switch(type) {
     case 'line':
-      drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
-      drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
-      break;
     case 'rect':
+    case 'arrow':
       drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
       drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
       break;

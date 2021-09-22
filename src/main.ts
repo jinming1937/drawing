@@ -1,6 +1,8 @@
 import {animate} from './util/animate';
 import {axisTips, initCanvas, drawData, mouseDraw, initKey, initExportPicture, initExportData, IDrawData, Txt, Pen} from './dom';
-import {drawAxis, setBackground, drawLine, drawLineRect, drawPen, drawText} from './draw';
+import {drawAxis, setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
+
+const cacheData: IDrawData[] = [];
 
 function Main(w: Window) {
   console.log('window load ok, start js!!!');
@@ -16,25 +18,30 @@ function Main(w: Window) {
 
   {
     // 绘画操作的前进、后退
-    const cache: IDrawData[] = [];
     initKey(window, function(action: 'back' | 'forward') {
       switch(action) {
         case 'back':
           // command + z, 执行
           if (drawData.length > 0) {
             const shape = drawData.pop();
-            if (shape) cache.push(shape);
+            if (shape) cacheData.push(shape);
           }
           break;
         case 'forward':
-          if (cache.length > 0) {
-            const shape = cache.pop();
+          if (cacheData.length > 0) {
+            const shape = cacheData.pop();
             if (shape) drawData.push(shape);
           }
           break;
       }
     });
   }
+
+  // w.cacheData = cacheData;
+  // w.drawData = drawData;
+
+  Object.assign(w, {cacheData});
+  Object.assign(w, {drawData});
 
   animate(function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -55,6 +62,8 @@ function Main(w: Window) {
         case 'txt':
           drawText(context, color, (item as Txt).text || '', shape);
           break;
+        case 'arrow':
+          drawArrow(context, color, lineWidth, shape);
       }
     })
   });
@@ -62,4 +71,9 @@ function Main(w: Window) {
 
 window.onload = () => {
   Main(window);
+}
+
+export {
+  drawData,
+  cacheData,
 }

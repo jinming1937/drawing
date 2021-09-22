@@ -85,7 +85,7 @@ const config: Configuration = {
     new HtmlWebpackPlugin({
       title: 'Math',
       filename: 'index.html',
-      chunks: ['vendor', 'commons', 'main'],
+      chunks: ['main'],
       template: path.join(__dirname, 'index.html')
     }),
     new MiniCssExtractPlugin({

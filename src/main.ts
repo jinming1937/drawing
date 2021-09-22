@@ -1,5 +1,5 @@
 import {animate} from './util/animate';
-import {axisTips, initCanvas, drawData, mouseDraw, initKey, initExportPicture, initExportData, IDrawData, Txt, Pen} from './dom';
+import {axisTips, initCanvas, drawData, mouseDraw, initKey, initExportPicture, initExportData, initImportJSON, IDrawData, Txt, Pen} from './dom';
 import {drawAxis, setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
 
 const cacheData: IDrawData[] = [];
@@ -14,6 +14,9 @@ function Main(w: Window) {
   setBackground(context, themeDom.value); // bg
   initExportPicture(canvas); // 绑定导出图片
   initExportData(w);
+  initImportJSON((val: IDrawData[]) => {
+    drawData.push(...val);
+  });
   mouseDraw(context); // 绑定事件
 
   {

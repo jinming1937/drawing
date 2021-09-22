@@ -120,7 +120,7 @@ const config: Configuration = {
     hot: true,
     contentBase: resolve('./dist'),
     // contentBase: false,
-    host: 'localhost',
+    host: '0.0.0.0',
     compress: true,
     port: PORT,
     overlay: {warnings: false, errors: true},

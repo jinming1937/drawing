@@ -1,5 +1,5 @@
 import {activePath} from '../lib';
-
+import {drawAxis} from './axis';
 
  export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[]) {
   if (lines.length < 0) return
@@ -9,49 +9,43 @@ import {activePath} from '../lib';
   const axisX = domWidth / 2
   const axisY = domHeight / 2
   const [x1, y1, x2, y2] = lines
+
+  // const [cX, cY] = [x2 + axisX, y2 + axisY];
+
   ctx.save()
   ctx.translate(axisX, axisY)
   ctx.beginPath()
   ctx.moveTo(x1, y1)
   ctx.lineTo(x2, y2)
 
-  console.log(x1, -y1, x2, -y2);
+
   let angle = 0;
   let f = -1;
-  // if (x2 > x1 && (-y2) > (-y1)) {
-  //   // 向上
-  //   angle = Math.atan((-y2) - (-y1) / (x2 - x1)); // 余弦值
-  // } else if (x2 > x1 && (-y2) < (-y1)) {
-  //   angle = Math.atan((-y2) - (-y1) / (x2 - x1)); // 余弦值
-  // } else if(x1 === x2 && (-y2) > (-y1)) {
-  //   angle = -90 * Math.PI / 180;
-  // } else if (x1 === x2 && (-y2) < (-y1)) {
-  //   angle = 90 * Math.PI / 180;
-  // } else if (x2 < x1 && (-y2) > (-y1)) {
-  //   angle = Math.atan((-y2) - (-y1) / (x1 - x2)); // 余弦值
-  // } else {
-  //   angle = Math.atan((-y2) - (-y1) / (x1 - x2)); // 余弦值
-  // }
 
-  if (x2 > x1 && (-y2) > (-y1)) {
-    angle = Math.atan((x2 - x1) / (-y2) - (-y1));
+  if (x2 !== x1) {
+    angle = Math.atan(((-y2) - (-y1)) / (x2 - x1)); // 反正切值 返回弧度
+    if (x2 < x1) {
+      f = 1;
+    } else {
+      f = -1;
+    }
+  } else {
+    angle = 0;
   }
-
 
   ctx.save()
   ctx.translate(x2, y2);
-  ctx.rotate(angle)
-  // ctx.save();
-  // ctx.rotate(45 * Math.PI / 180);
+  ctx.rotate(-angle);  // y/x -> 应该逆时针旋转
   ctx.moveTo(0, 0);
-  ctx.lineTo(f * 40, 20);
-  ctx.lineTo(f * 40, -20);
+  ctx.lineTo(f * 20, 10);
+  ctx.lineTo(f * 20, -10);
   ctx.lineTo(0, 0);
+  ctx.fillStyle = color;
+  ctx.fill();
   ctx.restore()
 
-  ctx.strokeStyle = color // '#f5f5f5';
+  ctx.strokeStyle = color
   ctx.lineWidth = lineWidth
-  // ctx.closePath()
   ctx.stroke()
   ctx.restore()
 }

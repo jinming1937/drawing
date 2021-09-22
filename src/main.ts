@@ -46,7 +46,7 @@ function Main(w: Window) {
   animate(function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
     setBackground(context, themeDom.value);
-    if(needAxis.checked) { drawAxis(context, '#FFFFFF') }
+    if(needAxis.checked) { drawAxis(context) }
     drawData.forEach((item) => {
       const {type, color, lineWidth, shape} = item;
       switch(type) {

@@ -6,9 +6,8 @@
  * @param {String} x x axis string x, s etc...
  * @param {String} y y axis string x, t etc...
  */
-export function drawAxis(ctx: CanvasRenderingContext2D, color: string = '#FFFFFF', needOriginPoint: boolean = false, x = 'x', y = 'y') {
-  const centerX = ctx.canvas.width / 2;
-  const centerY = ctx.canvas.height / 2;
+export function drawAxis(ctx: CanvasRenderingContext2D, center: [number, number] = [ctx.canvas.width / 2, ctx.canvas.height / 2], color: string = '#FFFFFF', needOriginPoint: boolean = false, x = 'x', y = 'y') {
+  const [centerX, centerY] = center;
   const halfLine = 450; // 半线长
   const arrowHeight = 20; // 箭头长度
   const arrowWidth = arrowHeight / 2; // 箭头宽度

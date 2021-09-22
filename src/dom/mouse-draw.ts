@@ -26,14 +26,6 @@ export type Txt = {
 
 export type IDrawData = Common | Pen | Txt;
 
-// {
-//   type: IShapeType;
-//   color: string;
-//   lineWidth: number;
-//   shape: number[];
-//   text?: string;
-// }
-
 export const drawData: IDrawData[] = [];
 let currentIndex = 0;
 
@@ -222,6 +214,12 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
 
   let input = ''; // 维护文字输入状态，超长禁止输入
   textarea.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      input = '';
+      endInput(textarea);
+      textareaMask.style.display = 'none';
+      return;
+    }
     if (input.length > 30 && e.key !== 'Backspace') {
       e.preventDefault();
       e.stopPropagation();

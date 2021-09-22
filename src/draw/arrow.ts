@@ -1,8 +1,5 @@
-import {activePath} from '../lib';
-import {drawAxis} from './axis';
-
- export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[]) {
-  if (lines.length < 0) return
+export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[], solid: boolean = false) {
+  if (lines.length < 4) return
   const dom = ctx.canvas
   const domWidth = dom.width
   const domHeight = dom.height
@@ -33,15 +30,24 @@ import {drawAxis} from './axis';
     angle = 0;
   }
 
+  const len = Math.min(Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2)) * 0.1, solid ? 15 : 20);
   ctx.save()
   ctx.translate(x2, y2);
   ctx.rotate(-angle);  // y/x -> 应该逆时针旋转
   ctx.moveTo(0, 0);
-  ctx.lineTo(f * 20, 10);
-  ctx.lineTo(f * 20, -10);
-  ctx.lineTo(0, 0);
-  ctx.fillStyle = color;
-  ctx.fill();
+  ctx.lineTo(f * len * 2, len);
+  if (solid) {
+    ctx.lineTo(f * len * 2, -len);
+    ctx.moveTo(0, 0);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  } else {
+    ctx.moveTo(0, 0);
+    ctx.lineTo(f * len * 2, -len);
+    ctx.strokeStyle = color;
+    ctx.stroke();
+  }
   ctx.restore()
 
   ctx.strokeStyle = color

@@ -135,11 +135,23 @@ function move(e: MouseEvent, axisX: number, axisY: number) {
       drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
       break;
     case 'pen':
-      (drawData[currentIndex] as Pen).lines.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+      bounce(+new Date(), () => {
+        (drawData[currentIndex] as Pen).lines.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+      });
       break;
     case 'txt':
       break;
   }
+}
+let time = +new Date();
+function bounce(dateTime: number, fn: Function) {
+  // let time = +new Date();
+  console.log(dateTime - time);
+  if(dateTime - time < 30) {
+    return;
+  }
+  time = dateTime;
+  fn();
 }
 
 function end(e: MouseEvent, axisX: number, axisY: number) {

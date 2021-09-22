@@ -40,12 +40,6 @@ function Main(w: Window) {
     });
   }
 
-  // w.cacheData = cacheData;
-  // w.drawData = drawData;
-
-  Object.assign(w, {cacheData});
-  Object.assign(w, {drawData});
-
   animate(function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
     setBackground(context, themeDom.value);

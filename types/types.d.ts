@@ -11,7 +11,7 @@ declare interface MouseEvent extends UIEvent {
   layerY: number;
 }
 
-declare interface Window {
-  drawData: any;
-  cacheData: any;
-}
+// declare interface Window {
+//   drawData: any;
+//   cacheData: any;
+// }

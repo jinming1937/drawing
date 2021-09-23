@@ -9,23 +9,23 @@
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
   <div class="tool">
-    <input type="button" id="clear-page" class="btn" value="clear" onclick="window.location.reload()">
-    <input type="button" id="export-picture" class="btn" value="↓ picture">
-    <input type="button" id="export-data" class="btn" value="↓ json">
+    <input type="button" id="clear-page" class="btn" value="清空" onclick="window.location.reload()">
+    <input type="button" id="export-picture" class="btn" value="导出图片">
+    <input type="button" id="export-data" class="btn" value="导入数据">
     <label class="btn file-upload">
-      ↑json
+      导出数据
       <input type="file" name="import-data" id="import-data">
     </label>
-    <label class="line">
-      line:
+    <label class="line btn">
+      线段:
       <input type="radio" name="shape" id="line" value="line" checked>
-      | rect:
+      | 矩形:
       <input type="radio" name="shape" id="rect" value="rect">
-      | pen:
+      | 画笔:
       <input type="radio" name="shape" id="pen" value="pen">
-      | txt:
+      | 文本:
       <input type="radio" name="shape" id="txt" value="txt">
-      | arrow:
+      | 箭头:
       <input type="radio" name="shape" id="arrow" value="arrow">
     </label>
     <input class="color" type="color" value="#ffffff" name="color" id="color">
@@ -34,8 +34,8 @@
       <option value="2">==== 2px</option>
       <option value="3">≡≡≡≡ 3px</option>
     </select>
-    <label class="label-btn" for="need-axis">
-      axis?:
+    <label class="label-btn btn" for="need-axis">
+      坐标轴?:
       <input type="checkbox" name="need-axis" id="need-axis" checked>
     </label>
     <select class="line-width" name="theme" id="theme" value="#000000">
@@ -48,6 +48,7 @@
       <option value="blue">blue</option>
       <option value="green">green</option>
     </select>
+    <label class="btn" title="根据【线段、矩形、画笔、文本、箭头】画图，鼠标点击开始，松开鼠标结束，可切换颜色，线段粗细，显示隐藏坐标轴，主题色等">?</label>
   </div>
 </body>
 </html>

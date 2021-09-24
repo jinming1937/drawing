@@ -6,7 +6,7 @@
  * @returns canvas context
  */
 export function initCanvas(canvasElementId: string, width: number = 680, height: number = 480): [CanvasRenderingContext2D | null, HTMLCanvasElement] {
-  const dpr = window.devicePixelRatio
+  const dpr = 2; // window.devicePixelRatio
   let canvasElement = window.document.getElementById(canvasElementId) as HTMLCanvasElement
   if (!canvasElement) {
     canvasElement = document.createElement('canvas')

@@ -32,6 +32,7 @@ export function initImportJSON(fn: Function) {
           } catch (error) {
             alert('analyse file error:' + error);
           }
+          dom.value = ''; // 使onchange 会在相同文件时触发
         }
         reader.onerror = (ev: ProgressEvent<FileReader>) => {
           alert(ev);

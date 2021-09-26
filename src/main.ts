@@ -1,13 +1,12 @@
 import {animate} from './util/animate';
-import {axisTips, initCanvas, drawData, mouseDraw, initKey, initExportPicture, initExportData, initImportJSON, IDrawData, Txt, Pen} from './dom';
-import {drawAxis, setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
+import {axisTips, initCanvas, drawData, mouseDraw, initKey, initExportPicture, initExportData, initImportJSON, IDrawData, Txt, Pen, initRemote, initClear} from './dom';
+import {setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
 
 const cacheData: IDrawData[] = [];
 
 function Main(w: Window) {
   console.log('window load ok, start js!!!');
   const themeDom = document.getElementById('theme') as HTMLInputElement;
-  const needAxis = document.getElementById('need-axis') as HTMLInputElement;
   const [context, canvas] = initCanvas('brick-app', window.innerWidth, window.innerHeight);
   if (!context) return;
   axisTips(canvas); // 坐标提示
@@ -17,6 +16,27 @@ function Main(w: Window) {
   initImportJSON((val: IDrawData[]) => {
     drawData.push(...val);
   });
+
+  initRemote((fileName: string) => {
+    if(fileName) {
+      const name = window.encodeURIComponent(fileName);
+      const url = `http://file.auoqu.com/v1/${name}`;
+      window.fetch(url).then((res) => {
+        return res.json();
+      }).then(function(json) {
+        console.log(json);
+        if (Array.isArray(json) && json.length > 0) {
+          drawData.push(...json);
+        }
+      });
+    }
+  });
+
+  initClear(() => {
+    drawData.length = 0;
+    cacheData.length = 0;
+  });
+
   mouseDraw(context); // 绑定事件
 
   {
@@ -43,7 +63,6 @@ function Main(w: Window) {
   animate(function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
     setBackground(context, themeDom.value);
-    if(needAxis.checked) { drawAxis(context) }
     drawData.forEach((item) => {
       const {type, color, lineWidth, shape} = item;
       switch(type) {

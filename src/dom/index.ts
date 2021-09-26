@@ -5,3 +5,5 @@ export * from './init-key';
 export * from './export-data';
 export * from './export-picture';
 export * from './import-data';
+export * from './init-remote';
+export * from './init-clear';

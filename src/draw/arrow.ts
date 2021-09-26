@@ -20,20 +20,20 @@ export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidt
   let f = -1;
 
   if (x2 !== x1) {
-    angle = Math.atan(((-y2) - (-y1)) / (x2 - x1)); // 反正切值 返回弧度
+    angle = -Math.atan(((-y2) - (-y1)) / (x2 - x1)); // 反正切值 返回弧度
     if (x2 < x1) {
       f = 1;
     } else {
       f = -1;
     }
   } else {
-    angle = 0;
+    angle = (y2 > y1 ? 1 : -1) * 90 * Math.PI / 180;
   }
 
   const len = Math.min(Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2)) * 0.1, solid ? 15 : 20);
   ctx.save()
   ctx.translate(x2, y2);
-  ctx.rotate(-angle);  // y/x -> 应该逆时针旋转
+  ctx.rotate(angle);  // y/x -> 应该逆时针旋转
   ctx.moveTo(0, 0);
   ctx.lineTo(f * len * 2, len);
   if (solid) {

@@ -26,7 +26,16 @@ export type Txt = {
 
 export type IDrawData = Common | Pen | Txt;
 
-export const drawData: IDrawData[] = [];
+export const drawData: IDrawData[] = new Proxy([], {
+  get: (obj, prop) => {
+    return obj[prop];
+  },
+  set: (obj, prop, val) => {
+    obj[prop] = val;
+    // updateList(val);
+    return true;
+  }
+});
 let currentIndex = 0;
 
 /**
@@ -89,7 +98,7 @@ function showInput(x: number, y: number) {
 
 /**
  * 返回绘画类型
- * @returns 'line' | 'rect' | 'pen' | 'txt'
+ * @returns 'line' | 'rect' | 'pen' | 'txt' | 'arrow'
  */
 function getType(): IShapeType {
   const dom = document.querySelectorAll('input[name="shape"]');
@@ -101,27 +110,61 @@ function getType(): IShapeType {
   return 'line';
 }
 
-function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: MouseEvent, axisX: number, axisY: number) {
+function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
   const color = `${colorDom.value || '#ffffff'}`;
   const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
   currentIndex = drawData.length;
+  // const obj: IDrawData = {
+  //   type, color, lineWidth, shape: [], lines: [], txt: ''
+  // } as IDrawData;
+  // const shape: number[] = [];
+  // const lines: number[][] = [];
+  // Object.defineProperties(obj, {
+  //   shape: {
+  //     writable: true,
+  //     configurable: false,
+  //     enumerable: false,
+  //     get: () => shape,
+  //     set: (val: number[]) => shape.push(...val),
+  //   },
+  //   lines: {
+  //     writable: true,
+  //     configurable: false,
+  //     enumerable: false,
+  //     get: () => lines,
+  //     set: (val: number[][]) => lines.push(...val),
+  //   },
+  //   txt: {
+  //     writable: true,
+  //     configurable: false,
+  //     enumerable: false,
+  //     get: () => lines,
+  //     set: (val: number[][]) => lines.push(...val),
+  //   }
+  // });
   switch(type) {
     case 'line':
     case 'rect':
     case 'arrow':
+      // obj.shape.push(...[e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+      // drawData.push(obj);
       drawData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY]});
       break;
     case 'pen':
+      // obj.lines.push(...[[e.layerX * 2 - axisX, e.layerY * 2 - axisY]]);
+      // drawData.push(obj);
       drawData.push({type, color, lineWidth, shape: [], lines: [[e.layerX * 2 - axisX, e.layerY * 2 - axisY]]});
       break;
     case 'txt':
+      // obj.shape.push(...[e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+      // drawData.push(obj);
       drawData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY], text: ''});
       break;
   }
 }
 
-function move(e: MouseEvent, axisX: number, axisY: number) {
+function move(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
   const current = drawData[currentIndex];
   if (!current || (current.shape.length + ((current as Pen).lines?.length || 0)) === 0) {
@@ -143,10 +186,9 @@ function move(e: MouseEvent, axisX: number, axisY: number) {
       break;
   }
 }
+
 let time = +new Date();
 function bounce(dateTime: number, fn: Function) {
-  // let time = +new Date();
-  console.log(dateTime - time);
   if(dateTime - time < 30) {
     return;
   }
@@ -154,7 +196,7 @@ function bounce(dateTime: number, fn: Function) {
   fn();
 }
 
-function end(e: MouseEvent, axisX: number, axisY: number) {
+function end(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
   switch(type) {
     case 'line':
@@ -176,16 +218,85 @@ function end(e: MouseEvent, axisX: number, axisY: number) {
   currentIndex = drawData.length;
 }
 
+function updateList(val: unknown) {
+  console.log(val);
+  if(typeof val === 'object') {
+    // const proxyVal = new Proxy(val as Object, {
+    //   get: (obj, prop) => {
+    //     return obj[prop];
+    //   }
+    // });
+  }
+  const ul = document.querySelector<HTMLUListElement>('#right-bar-list');
+  if(ul) {
+    ul.innerHTML = "";
+    drawData.forEach((draw, index) => {
+      const {type, lineWidth, color, shape} = draw;
+      const li = document.createElement('li');
+      const txtDom = `
+        <div class="left">
+          <div>${type}</div>
+          <div style="width: 20px;height: 20px;background-color: ${color}"></div>
+        </div>
+        <div class="right">
+          <input ${draw.type === 'txt' ? '': 'disabled' } type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
+          <input type="text" value="${shape}" />
+        </div>
+        <div class="delete" name="delete">x</div>
+      `;
+      li.innerHTML = txtDom;
+      li.setAttribute('data-index', `${index}`);
+      ul.appendChild(li);
+    });
+  }
+}
+
+function initRightBar() {
+  const div = document.createElement('div');
+  const ul = document.createElement('ul');
+  div.id = 'right-bar';
+  div.className = 'right-bar';
+  ul.id = 'right-bar-list'
+
+  ul.addEventListener('click', (e: MouseEvent) => {
+    ul.querySelectorAll('li')?.forEach((i) => {
+      i.className = '';
+    });
+    let flag = false;
+    let deleteIndex = -1;
+    let liNode: any = null;
+    (e as any).path.forEach((i: any) => {
+      if (i.localName === 'li' && !flag) {
+        flag = true;
+        i.className = 'active';
+      }
+      if (i.localName === 'div' && i.getAttribute('name') === 'delete' && liNode === null) {
+        liNode = i.parentNode;
+        deleteIndex = parseInt(liNode.getAttribute('data-index'), 10);
+      }
+    });
+
+    if (deleteIndex >= 0 && liNode) {
+      ul.removeChild(liNode);
+      drawData.splice(deleteIndex, 1);
+    }
+  });
+
+  div.appendChild(ul);
+  document.body.append(div);
+}
+
 /**
  * 结束输入状态
  * @param {Object} inputDom textarea dom
  */
-function endInput(inputDom: HTMLTextAreaElement) {
+function endInput(inputDom: HTMLTextAreaElement, textareaMask: HTMLDivElement) {
   if (inputDom.value) {
     (drawData[currentIndex] as Txt).text = inputDom.value;
   } else {
     drawData.pop();
   }
+  textareaMask.style.display = 'none';
   inputDom.style.display = 'none';
   inputDom.value = '';
   currentIndex = drawData.length;
@@ -211,27 +322,57 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
   let drawing = false;
   dom.addEventListener('mousedown', (e: MouseEvent) => {
     drawing = true;
-    start(colorDom, lineWidthDom, e, axisX, axisY);
+    start(colorDom, lineWidthDom, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
   });
 
   dom.addEventListener('mousemove', (e: MouseEvent) => {
     if (!drawing) return;
-    move(e, axisX, axisY);
+    move({layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
   });
 
   dom.addEventListener('mouseup', (e: MouseEvent) => {
     if (!drawing) return;
-    end(e, axisX, axisY);
+    end({layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
+    drawing = false;
   });
-
+  dom.addEventListener('mouseleave', () => {
+    drawing = false;
+  });
+  dom.addEventListener('mouseout', () => {
+    drawing = false;
+  });
+  {
+    // touch
+    dom.addEventListener('touchstart', (e: TouchEvent) => {
+      drawing = true;
+      start(colorDom, lineWidthDom, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+    });
+    dom.addEventListener('touchmove', (e: TouchEvent) => {
+      console.log(e.changedTouches.length, e);
+      if (!drawing) return;
+      move({layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+    });
+    dom.addEventListener('touchend', (e: TouchEvent) => {
+      if (!drawing) return;
+      end({layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+      drawing = false;
+    });
+    dom.addEventListener('touchcancel', (e: TouchEvent) => {
+      drawing = false;
+    });
+    dom.addEventListener('drag', () => {});
+    document.body.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+    }, {passive: false});
+  }
   let input = ''; // 维护文字输入状态，超长禁止输入
   textarea.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      input = '';
-      endInput(textarea);
-      textareaMask.style.display = 'none';
-      return;
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      cancelInput();
+      return
     }
+    if (e.key === 'Enter') return cancelInput();
     if (input.length > 30 && e.key !== 'Backspace') {
       e.preventDefault();
       e.stopPropagation();
@@ -241,8 +382,13 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
   });
 
   textareaMask.addEventListener('click', (e: MouseEvent) => {
-    input = '';
-    endInput(textarea); // 点击蒙层关闭输入态
-    textareaMask.style.display = 'none';
+    cancelInput();
   });
+
+  function cancelInput() {
+    input = '';
+    endInput(textarea, textareaMask);
+  }
+
+  // initRightBar();
 }

@@ -1,11 +1,9 @@
-
 /**
  * 初始化键盘事件
  * @param {Function} fn callback
  */
 export function initKey(w: Window, fn: Function) {
-  w.addEventListener('keydown', (e) => {
-    // console.log(e.ctrl, e.metaKey, e.key, e.shiftKey, e.composed);
+  w.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.metaKey || e.ctrlKey) { // windows ctrl 或者 Mac meta
       switch(e.key) {
         case 'z':
@@ -15,6 +13,8 @@ export function initKey(w: Window, fn: Function) {
           fn('forward');
           break;
       }
+    } else if (e.key === 'Escape') {
+      fn('back');
     }
   });
 }

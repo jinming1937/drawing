@@ -7,3 +7,4 @@ export * from './export-picture';
 export * from './import-data';
 export * from './init-remote';
 export * from './init-clear';
+export * from './init-right-bar';

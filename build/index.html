@@ -9,14 +9,13 @@
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
   <div class="tool">
-    <input type="button" id="clear-page" class="btn" value="清空">
-    <input type="button" id="export-picture" class="btn" value="导出图片">
-    <input type="button" id="export-data" class="btn" value="导出数据">
+    <button id="clear-page" class="btn" >清空</button>
+    <button id="export-picture" class="btn" >导出图片</button>
+    <button id="export-data" class="btn" >导出数据</button>
     <label class="btn file-upload">
-      导入数据
-      <input type="file" name="import-data" id="import-data" accept=".json,application/json">
-    </label>
-    <label class="line btn">
+      <span class="txt">导入数据</span>
+      <input type="file" name="import-data" id="import-data" accept=".json,application/json"></label>
+    <label class="btn line">
       线段:
       <input type="radio" name="shape" id="line" value="line" checked>
       | 矩形:
@@ -49,7 +48,7 @@
       <option value="axis.json">坐标轴</option>
       <option value="trigonometric_function.json">三角函数</option>
     </select>
-    <label class="btn" title="根据【线段、矩形、画笔、文本、箭头】画图，鼠标点击开始，松开鼠标结束，可切换颜色，线段粗细，显示隐藏坐标轴，主题色等">?</label>
+    <label class="btn help" title="根据【线段、矩形、画笔、文本、箭头】画图，鼠标点击开始，松开鼠标结束，可切换颜色，线段粗细，显示隐藏坐标轴，主题色等">?</label>
   </div>
 </body>
 </html>

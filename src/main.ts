@@ -1,5 +1,5 @@
 import {animate} from './util/animate';
-import {axisTips, initCanvas, drawData, mouseDraw, initKey, initExportPicture, initExportData, initImportJSON, IDrawData, Txt, Pen, initRemote, initClear} from './dom';
+import {axisTips, initCanvas, drawData, mouseDraw, initKey, initExportPicture, initExportData, initImportJSON, IDrawData, Txt, Pen, initRemote, initClear, initRightBar} from './dom';
 import {setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
 
 const cacheData: IDrawData[] = [];
@@ -16,6 +16,7 @@ function Main(w: Window) {
   initImportJSON((val: IDrawData[]) => {
     drawData.push(...val);
   });
+  initRightBar();
 
   initRemote((fileName: string) => {
     if(fileName) {

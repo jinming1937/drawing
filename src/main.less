@@ -3,77 +3,162 @@
   padding: 0;
   border: none;
 }
-body {
+
+html, body, .box {
+  user-select: none;
+  -webkit-user-select: none;
   text-align: center;
   width: 100%;
   height: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
+
+ul {
+  list-style: none;
+}
+
+input {
+  outline: none;
+}
+
 .box {
   line-height: 0;
-  display: inline-block;
+  display: block;
   position: relative;
 }
 
 .tool {
   position: absolute;
+  padding: 5px 8px;
   bottom: 0;
   background: rgba(88, 88, 88, 0.3);
+  font-size: 12px;
   color: #ababab;
-  padding: 5px 8px;
-  border-radius: 4px;
   width: calc(100% - 10px);
   text-align: left;
-}
 
-.tool .btn {
-  min-width: 45px;
-  padding: 0 6px;
-  height: 22px;
-  border-radius: 4px;
-  vertical-align: top;
-  cursor: pointer;
-  background-color: #e0e0e0;
-}
+  input, select {
+    outline: none;
+    background: #e0e0e0;
+  }
 
-.tool .btn:active {
-  background-color: #f5f5f5;
-}
+  .btn {
+    font-size: 12px;
+    min-width: 45px;
+    padding: 0 6px;
+    height: 22px;
+    border-radius: 4px;
+    vertical-align: top;
+    cursor: pointer;
+    background-color: #e0e0e0;
 
-.tool .line, .tool .label-btn {
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  color: #000;
-  font-size: 13px;
-  display: inline-block;
-  line-height: 22px;
-}
+    &:active {
+      background-color: #f5f5f5;
+    }
+  }
 
-.tool .color {
-  height: 22px;
-  border-radius: 4px;
-}
+  .line, .label-btn {
 
-.tool .select-round-rect {
-  height: 22px;
-  vertical-align: top;
-  border-radius: 4px;
-}
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    color: #000;
+    font-size: 12px;
+    display: inline-block;
+    line-height: 22px;
+    outline: none;
+  }
 
-.tool input, .tool select, .tool .label-btn {
-  outline: none;
-  background: #e0e0e0;
-}
+  .txt {
+    height: 22px;
+    line-height: 22px;
+    display: block;
+  }
 
-.tool {
   .file-upload {
-    font-size: 13.3333px;
+    font-size: 12px;
     color: #000;
     display: inline-block;
+    max-width: 58px;
+    height: 22px;
+    line-height: 22px;
     input {
       height: 0px;
       width: 0px;
       overflow: hidden;
+    }
+  }
+  .color {
+    height: 22px;
+    border-radius: 4px;
+  }
+
+  .select-round-rect {
+    height: 22px;
+    vertical-align: top;
+    border-radius: 4px;
+  }
+
+  .help {
+    height: 22px;
+    line-height: 22px;
+    padding: 4px 8px;
+  }
+}
+
+.right-bar {
+  width: 220px;
+  height: calc(100% - 60px);
+  position: absolute;
+  top: 14px;
+  right: 5px;
+  background: rgba(64, 64, 64, 0.45);
+  overflow-y: scroll;
+
+  ul {
+    li {
+      text-align: left;
+      display: flex;
+      padding: 5px;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 3px;
+      &:hover {
+        cursor: pointer;
+        background-color: #02a4a9;
+      }
+
+      &:active {
+        background-color: #02a4a9;
+      }
+
+      &.active {
+        background-color: #02a4a9;
+      }
+
+      .left {
+        width: 32px;
+      }
+      .right {
+        flex: 1;
+
+        &>input[disabled] {
+          cursor: no-drop;
+        }
+      }
+      .delete {
+        float: right;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        background: #ffffff;
+        line-height: 20px;
+
+        &:active {
+          background-color: cornsilk;
+        }
+      }
     }
   }
 }

@@ -1,30 +1,6 @@
-
-export type IShapeType = 'line' | 'rect' | 'pen' | 'txt' | 'arrow';
-
-export type Pen = {
-  type: 'pen';
-  color: string;
-  lineWidth: number;
-  shape: number[];
-  lines: Array<number[]>;
-}
-
-export type Common = {
-  type: 'line' | 'rect' | 'arrow';
-  color: string;
-  lineWidth: number;
-  shape: number[];
-}
-
-export type Txt = {
-  type: 'txt';
-  color: string;
-  lineWidth: number;
-  shape: number[];
-  text: string;
-}
-
-export type IDrawData = Common | Pen | Txt;
+import {IDrawData, IShapeType, Pen, Txt} from 'types/common';
+import {initInputDom, showInput} from './init-input-dom';
+import {bounce, coreData} from '../lib';
 
 export const drawData: IDrawData[] = new Proxy([], {
   get: (obj, prop) => {
@@ -32,69 +8,11 @@ export const drawData: IDrawData[] = new Proxy([], {
   },
   set: (obj, prop, val) => {
     obj[prop] = val;
-    // updateList(val);
+    updateList(val);
     return true;
   }
 });
 let currentIndex = 0;
-
-/**
- * 初始化一个颜色dom
- * @param {Object} colorDom 颜色DOM
- */
-function initInputDom(colorDom: HTMLInputElement): [HTMLTextAreaElement, HTMLDivElement] {
-  const textarea = document.createElement('textarea');
-  textarea.id = 'textarea-input';
-  textarea.style.background = "rgb(255 255 255 / 70%)";
-  textarea.style.position = "absolute";
-  textarea.style.left = '0';
-  textarea.style.top = '0';
-  textarea.style.color = colorDom.value;
-  textarea.style.fontFamily = 'serif';
-  textarea.style.fontSize = '16px';
-  textarea.style.zIndex = '1000';
-  textarea.style.border = 'none';
-  textarea.style.outline = 'none';
-  textarea.style.resize = 'none';
-  textarea.style.width = '150px';
-  textarea.style.height = '40px';
-  textarea.style.borderRadius = '2px';
-  textarea.style.display = 'none';
-  textarea.placeholder = '请输入少于30个字';
-
-  const textareaMask = document.createElement('div');
-  textareaMask.id = 'textarea-mask';
-  textareaMask.style.display = 'none';
-  textareaMask.style.position = 'absolute';
-  textareaMask.style.width = '100%';
-  textareaMask.style.height = '100%';
-  textareaMask.style.top = '0';
-  textareaMask.style.left = '0';
-  textareaMask.style.background = 'transparent';
-
-  document.body.append(textarea);
-  document.body.append(textareaMask);
-  return [textarea, textareaMask];
-}
-
-/**
- * 展示文本输入
- * @param {number} x x position
- * @param {number} y y position
- */
-function showInput(x: number, y: number) {
-  const colorDom = document.getElementById('color') as HTMLInputElement;
-  const textarea = document.getElementById('textarea-input');
-  const textareaMask = document.getElementById('textarea-mask');
-  if (textareaMask) textareaMask.style.display = 'block';
-  if (textarea) {
-    textarea.style.display = 'block';
-    textarea.style.left = `${x}px`;
-    textarea.style.top = `${y - 17}px`;
-    textarea.style.color = colorDom.value;
-    textarea.focus();
-  }
-}
 
 /**
  * 返回绘画类型
@@ -114,7 +32,7 @@ function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {l
   const type = getType();
   const color = `${colorDom.value || '#ffffff'}`;
   const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
-  currentIndex = drawData.length;
+  currentIndex = coreData.length;
   // const obj: IDrawData = {
   //   type, color, lineWidth, shape: [], lines: [], txt: ''
   // } as IDrawData;
@@ -147,26 +65,20 @@ function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {l
     case 'line':
     case 'rect':
     case 'arrow':
-      // obj.shape.push(...[e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
-      // drawData.push(obj);
-      drawData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY]});
+      coreData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY]});
       break;
     case 'pen':
-      // obj.lines.push(...[[e.layerX * 2 - axisX, e.layerY * 2 - axisY]]);
-      // drawData.push(obj);
-      drawData.push({type, color, lineWidth, shape: [], lines: [[e.layerX * 2 - axisX, e.layerY * 2 - axisY]]});
+      coreData.push({type, color, lineWidth, shape: [], lines: [[e.layerX * 2 - axisX, e.layerY * 2 - axisY]]});
       break;
     case 'txt':
-      // obj.shape.push(...[e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
-      // drawData.push(obj);
-      drawData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY], text: ''});
+      coreData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY], text: ''});
       break;
   }
 }
 
 function move(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
-  const current = drawData[currentIndex];
+  const current = coreData.getItem(currentIndex);
   if (!current || (current.shape.length + ((current as Pen).lines?.length || 0)) === 0) {
     return;
   }
@@ -174,12 +86,13 @@ function move(e: {layerX: number, layerY: number}, axisX: number, axisY: number)
     case 'line':
     case 'rect':
     case 'arrow':
-      drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
-      drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
+      current.shape[2] = e.layerX * 2 - axisX;
+      current.shape[3] = e.layerY * 2 - axisY;
+      // coreData.setItem(currentIndex, [...shape])
       break;
     case 'pen':
       bounce(+new Date(), () => {
-        (drawData[currentIndex] as Pen).lines.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+        (current as Pen).lines.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
       });
       break;
     case 'txt':
@@ -187,26 +100,18 @@ function move(e: {layerX: number, layerY: number}, axisX: number, axisY: number)
   }
 }
 
-let time = +new Date();
-function bounce(dateTime: number, fn: Function) {
-  if(dateTime - time < 30) {
-    return;
-  }
-  time = dateTime;
-  fn();
-}
-
 function end(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
+  const current = coreData.getItem(currentIndex);
   switch(type) {
     case 'line':
     case 'rect':
     case 'arrow':
-      drawData[currentIndex].shape[2] = e.layerX * 2 - axisX;
-      drawData[currentIndex].shape[3] = e.layerY * 2 - axisY;
+      current.shape[2] = e.layerX * 2 - axisX;
+      current.shape[3] = e.layerY * 2 - axisY;
       break;
     case 'pen':
-      (drawData[currentIndex] as Pen).lines.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
+      (current as Pen).lines.push([e.layerX * 2 - axisX, e.layerY * 2 - axisY]);
       break;
     case 'txt':
       if(document.getElementById('textarea-input')?.style.display === 'block') {
@@ -215,22 +120,21 @@ function end(e: {layerX: number, layerY: number}, axisX: number, axisY: number) 
       showInput(e.layerX, e.layerY);
       return; // input 结束在blur处，所以后面的currentIndex 不用移动
   }
-  currentIndex = drawData.length;
+  currentIndex = coreData.length;
 }
 
 function updateList(val: unknown) {
-  console.log(val);
-  if(typeof val === 'object') {
-    // const proxyVal = new Proxy(val as Object, {
-    //   get: (obj, prop) => {
-    //     return obj[prop];
-    //   }
-    // });
-  }
+  // if(typeof val === 'object') {
+  //   const proxyVal = new Proxy(val as Object, {
+  //     get: (obj, prop) => {
+  //       return obj[prop];
+  //     }
+  //   });
+  // }
   const ul = document.querySelector<HTMLUListElement>('#right-bar-list');
   if(ul) {
     ul.innerHTML = "";
-    drawData.forEach((draw, index) => {
+    coreData.value.forEach((draw, index) => {
       const {type, lineWidth, color, shape} = draw;
       const li = document.createElement('li');
       const txtDom = `
@@ -251,55 +155,20 @@ function updateList(val: unknown) {
   }
 }
 
-function initRightBar() {
-  const div = document.createElement('div');
-  const ul = document.createElement('ul');
-  div.id = 'right-bar';
-  div.className = 'right-bar';
-  ul.id = 'right-bar-list'
-
-  ul.addEventListener('click', (e: MouseEvent) => {
-    ul.querySelectorAll('li')?.forEach((i) => {
-      i.className = '';
-    });
-    let flag = false;
-    let deleteIndex = -1;
-    let liNode: any = null;
-    (e as any).path.forEach((i: any) => {
-      if (i.localName === 'li' && !flag) {
-        flag = true;
-        i.className = 'active';
-      }
-      if (i.localName === 'div' && i.getAttribute('name') === 'delete' && liNode === null) {
-        liNode = i.parentNode;
-        deleteIndex = parseInt(liNode.getAttribute('data-index'), 10);
-      }
-    });
-
-    if (deleteIndex >= 0 && liNode) {
-      ul.removeChild(liNode);
-      drawData.splice(deleteIndex, 1);
-    }
-  });
-
-  div.appendChild(ul);
-  document.body.append(div);
-}
-
 /**
  * 结束输入状态
  * @param {Object} inputDom textarea dom
  */
 function endInput(inputDom: HTMLTextAreaElement, textareaMask: HTMLDivElement) {
   if (inputDom.value) {
-    (drawData[currentIndex] as Txt).text = inputDom.value;
+    (coreData.getItem(currentIndex) as Txt).text = inputDom.value;
   } else {
-    drawData.pop();
+    coreData.pop();
   }
   textareaMask.style.display = 'none';
   inputDom.style.display = 'none';
   inputDom.value = '';
-  currentIndex = drawData.length;
+  currentIndex = coreData.length;
 }
 
 /**
@@ -316,7 +185,6 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
   const axisY = domHeight / 2;
   const colorDom = document.getElementById('color') as HTMLInputElement;
   const lineWidthDom = document.getElementById('lineWidth') as HTMLInputElement;
-
   const [textarea, textareaMask] = initInputDom(colorDom);
 
   let drawing = false;
@@ -389,6 +257,4 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
     input = '';
     endInput(textarea, textareaMask);
   }
-
-  // initRightBar();
 }

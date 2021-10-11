@@ -1,4 +1,6 @@
 /**
+ * left top or right top tip
+ *
  * layer: 元素级别, 元素左上角 0,0
  * offset: 元素级别, 元素左上角 0,0
  * client: document级别, 文档左上角 0,0

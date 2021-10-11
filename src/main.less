@@ -111,13 +111,33 @@ input {
 .right-bar {
   width: 220px;
   height: calc(100% - 60px);
+  padding: 5px;
   position: absolute;
   top: 14px;
-  right: 5px;
-  background: rgba(64, 64, 64, 0.45);
-  overflow-y: scroll;
+  right: -230px;
+  background: #fff;
+  transition: right 0.3s ease-in;
+
+  &.show {
+    right: 0;
+  }
+
+  .right-bar-btn {
+    width: 30px;
+    height: 30px;
+    background: #e0e0e0;
+    z-index: 1000;
+    cursor: pointer;
+    float: left;
+    margin-left: -35px;
+  }
 
   ul {
+    background-color: #607d8b;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+
     li {
       text-align: left;
       display: flex;

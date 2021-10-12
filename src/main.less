@@ -109,13 +109,15 @@ input {
 }
 
 .right-bar {
-  width: 220px;
+  width: 240px;
   height: calc(100% - 60px);
   padding: 5px;
   position: absolute;
   top: 14px;
-  right: -230px;
-  background: #fff;
+  right: -250px;
+  background: #e0e0e0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   transition: right 0.3s ease-in;
 
   &.show {
@@ -123,13 +125,15 @@ input {
   }
 
   .right-bar-btn {
-    width: 30px;
-    height: 30px;
+    width: 15px;
+    height: 20px;
     background: #e0e0e0;
     z-index: 1000;
     cursor: pointer;
     float: left;
-    margin-left: -35px;
+    margin-left: -20px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
   }
 
   ul {
@@ -157,14 +161,46 @@ input {
         background-color: #02a4a9;
       }
 
-      .left {
-        width: 32px;
-      }
-      .right {
+      .input-box {
         flex: 1;
+        margin-right: 5px;
 
-        &>input[disabled] {
-          cursor: no-drop;
+        .type {
+          color: #fff;
+          font-size: 14px;
+          vertical-align: text-top;
+        }
+        .color-box {
+          border-radius: 2px;
+          width: 45px;
+          height: 20px;
+          float: right;
+        }
+
+        .input-cube {
+          width: 100%;
+          display: flex;
+          font-size: 12px;
+          color: #fff;
+          margin-bottom: 3px;
+
+          &>span {
+            min-width: 50px;
+            display: inline-block;
+            text-align: right;
+            margin-right: 5px;
+          }
+
+          &>input {
+            flex: 1;
+            border-radius: 2px;
+            height: 20px;
+            padding-left: 3px;
+            padding-right: 3px;
+          }
+          &>input[disabled] {
+            cursor: no-drop;
+          }
         }
       }
       .delete {
@@ -173,7 +209,8 @@ input {
         height: 20px;
         text-align: center;
         background: #ffffff;
-        line-height: 20px;
+        line-height: 18px;
+        border-radius: 4px;
 
         &:active {
           background-color: cornsilk;

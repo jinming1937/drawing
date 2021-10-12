@@ -3,7 +3,7 @@
  * show data
  */
 
-import {IDrawData} from "types/common";
+import {IDrawData, Pen, Txt} from "types/common";
 import {coreData, CoreData, IDataChangeEvent} from "../lib";
 
 export function initRightBar(coreData: CoreData<IDrawData>) {
@@ -47,9 +47,36 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
     }
   });
 
+  ul.addEventListener('input', (e: any) => {
+    const val = e.target.value;
+    const type = e.target.getAttribute('data-type');
+    const index = parseInt(e.target.parentNode.parentNode.getAttribute('data-index'), 10);
+    const item = coreData.getItem(index);
+    switch(type) {
+      case 'shape':
+        const [startX = 0, startY = 0, endX = 0, endY = 0] = val.split(',');
+        coreData.setItem(index, {
+          ...item,
+          shape: [startX, startY, endX, endY],
+        });
+        break;
+      case 'text':
+        coreData.setItem(index, {
+          ...item,
+          text: val
+        } as Txt);
+        break;
+    }
+  });
+
+  let cacheData: IDrawData[] = [];
   window.addEventListener('dataChange', (e) => {
-    console.log(e);
-    updateList(e as CustomEvent<IDataChangeEvent<IDrawData>>);
+    if ((e as CustomEvent<IDataChangeEvent<IDrawData>>).detail.target !== 'set') {
+    // if (diff(cacheData, coreData.getValue())) {
+      // console.log('re render');
+      // cacheData = cacheData.concat(coreData.getValue());
+      render(coreData.getValue());
+    }
   });
 
   div.appendChild(divBtn);
@@ -58,27 +85,43 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
 }
 
 
-function updateList(val: CustomEvent<IDataChangeEvent<IDrawData>>) {
+function render(data: IDrawData[]) {
   const ul = document.querySelector<HTMLUListElement>('#right-bar-list');
   if(ul) {
     ul.innerHTML = "";
-    coreData.value.forEach((draw, index) => {
+    data.forEach((draw, index) => {
       const {type, lineWidth, color, shape} = draw;
       const li = document.createElement('li');
       const txtDom = `
-        <div class="left">
-          <div>${type}</div>
-          <div style="width: 20px;height: 20px;background-color: ${color}"></div>
+        <div class="input-box">
+          <span class="type">${type}</span>
+          <input class="color-box" type="color" value="${color}" />
+          <div class="input-cube">
+            <span>position:</span>
+            <input ${draw.type === 'txt' ? '': 'disabled' } type="text" data-type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
+          </div>
+          <div class="input-cube">
+            <span>text:</span>
+            <input type="text" value="${shape}" data-type="shape" />
+          </div>
         </div>
-        <div class="right">
-          <input ${draw.type === 'txt' ? '': 'disabled' } type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
-          <input type="text" value="${shape}" />
-        </div>
-        <div class="delete" name="delete">x</div>
+        <div class="delete" name="delete">×</div>
       `;
       li.innerHTML = txtDom;
       li.setAttribute('data-index', `${index}`);
       ul.appendChild(li);
     });
   }
+}
+
+function diff(cache: IDrawData[], value: IDrawData[]) {
+  console.log(cache, value);
+  if (cache.length !== value.length) return true;
+  let flag = false;
+  value.forEach((item, index) => {
+    if (cache[index].type !== item.type && !flag) {
+      flag = true;
+    }
+  });
+  return flag;
 }

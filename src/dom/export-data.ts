@@ -1,5 +1,5 @@
-import {coreData} from '../lib';
 import {IDrawData} from '../../types/common';
+import {coreData} from '../lib';
 
 
 function exportRaw(w: Window, name: string, data: string) {

@@ -23,39 +23,11 @@ function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {l
   const color = `${colorDom.value || '#ffffff'}`;
   const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
   currentIndex = coreData.length;
-  // const obj: IDrawData = {
-  //   type, color, lineWidth, shape: [], lines: [], txt: ''
-  // } as IDrawData;
-  // const shape: number[] = [];
-  // const lines: number[][] = [];
-  // Object.defineProperties(obj, {
-  //   shape: {
-  //     writable: true,
-  //     configurable: false,
-  //     enumerable: false,
-  //     get: () => shape,
-  //     set: (val: number[]) => shape.push(...val),
-  //   },
-  //   lines: {
-  //     writable: true,
-  //     configurable: false,
-  //     enumerable: false,
-  //     get: () => lines,
-  //     set: (val: number[][]) => lines.push(...val),
-  //   },
-  //   txt: {
-  //     writable: true,
-  //     configurable: false,
-  //     enumerable: false,
-  //     get: () => lines,
-  //     set: (val: number[][]) => lines.push(...val),
-  //   }
-  // });
   switch(type) {
     case 'line':
     case 'rect':
     case 'arrow':
-      coreData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY]});
+      coreData.push({type, color, lineWidth, shape: [e.layerX * 2 - axisX, e.layerY * 2 - axisY, e.layerX * 2 - axisX, e.layerY * 2 - axisY]});
       break;
     case 'pen':
       coreData.push({type, color, lineWidth, shape: [], lines: [[e.layerX * 2 - axisX, e.layerY * 2 - axisY]]});

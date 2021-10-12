@@ -58,8 +58,6 @@ export function axisTips(dom: HTMLCanvasElement, needAllInfo = false) {
   div.style.width = `${BLANK_WIDTH}px`;
   div.style.lineHeight = '14px';
   div.style.textAlign = 'left';
-  // const _text = document.createTextNode('');
-  // div.appendChild(_text);
   dom.parentNode?.appendChild(div);
   dom.addEventListener('mouseover', (e: MouseEvent) => {
     show(div);

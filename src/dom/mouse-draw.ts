@@ -1,17 +1,7 @@
-import {IDrawData, IShapeType, Pen, Txt} from 'types/common';
+import {IShapeType, Pen, Txt} from 'types/common';
 import {initInputDom, showInput} from './init-input-dom';
 import {bounce, coreData} from '../lib';
 
-export const drawData: IDrawData[] = new Proxy([], {
-  get: (obj, prop) => {
-    return obj[prop];
-  },
-  set: (obj, prop, val) => {
-    obj[prop] = val;
-    updateList(val);
-    return true;
-  }
-});
 let currentIndex = 0;
 
 /**
@@ -121,38 +111,6 @@ function end(e: {layerX: number, layerY: number}, axisX: number, axisY: number) 
       return; // input 结束在blur处，所以后面的currentIndex 不用移动
   }
   currentIndex = coreData.length;
-}
-
-function updateList(val: unknown) {
-  // if(typeof val === 'object') {
-  //   const proxyVal = new Proxy(val as Object, {
-  //     get: (obj, prop) => {
-  //       return obj[prop];
-  //     }
-  //   });
-  // }
-  const ul = document.querySelector<HTMLUListElement>('#right-bar-list');
-  if(ul) {
-    ul.innerHTML = "";
-    coreData.value.forEach((draw, index) => {
-      const {type, lineWidth, color, shape} = draw;
-      const li = document.createElement('li');
-      const txtDom = `
-        <div class="left">
-          <div>${type}</div>
-          <div style="width: 20px;height: 20px;background-color: ${color}"></div>
-        </div>
-        <div class="right">
-          <input ${draw.type === 'txt' ? '': 'disabled' } type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
-          <input type="text" value="${shape}" />
-        </div>
-        <div class="delete" name="delete">x</div>
-      `;
-      li.innerHTML = txtDom;
-      li.setAttribute('data-index', `${index}`);
-      ul.appendChild(li);
-    });
-  }
 }
 
 /**

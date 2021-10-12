@@ -1,8 +1,8 @@
+import {IDrawData, Pen, Txt} from 'types/common';
 import {animate} from './util/animate';
 import {axisTips, initCanvas, mouseDraw, initKey, initExportPicture, initExportData, initImportJSON, initRemote, initClear, initRightBar} from './dom';
 import {setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
 import {calculateMatrix, calculate3D, cal, createMatrix, coreData} from './lib';
-import {IDrawData, Pen, Txt} from 'types/common';
 
 function getNumMatrix(ctx: CanvasRenderingContext2D) {
   const startLeft: [number, number] = [-300 , -100];

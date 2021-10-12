@@ -1,9 +1,8 @@
 import {IDrawData} from "types/common";
 
-type IDataChangeEvent<T> = {
+export type IDataChangeEvent<T> = {
   target: string;
   value: T | null;
-  index: number;
 }
 
 export class CoreData<T> {
@@ -17,7 +16,6 @@ export class CoreData<T> {
       detail: {
         target: '',
         value: null,
-        index: 0
       }
     });
   }
@@ -30,45 +28,50 @@ export class CoreData<T> {
   //   this.value.length = val;
   // }
 
+  private setEventDetail(target: string, value: T[] | T | null) {
+    this.dataChange.detail.target = target;
+    this.dataChange.detail.value = value;
+  }
+
   public getItem(index: number): T {
     return this.value[index];
   }
 
   public setItem(index: number, item: T) {
     this.value[index] = item;
+    this.setEventDetail('clear', null);
+    window.dispatchEvent(this.dataChange);
   }
 
   public clear() {
     this.value.length = 0;
+    this.setEventDetail('clear', this.value);
+    window.dispatchEvent(this.dataChange);
   }
 
   public push(...item: T[]): number {
-    this.dataChange.detail.target = 'push';
-    this.dataChange.detail.value = item;
-    this.dataChange.detail.index = this.value.length;
-    window.dispatchEvent(this.dataChange);
     if(Array.isArray(item)) {
       this.value.push(...item);
     } else {
       this.value.push(item);
     }
+    this.setEventDetail('push', this.value);
+    window.dispatchEvent(this.dataChange);
     return this.value.length;
   }
 
-  public pop(): T {
-    this.dataChange.detail.target = 'push';
-    this.dataChange.detail.value = this.value[this.value.length - 1];
-    this.dataChange.detail.index = this.value.length - 1;
+  public pop(): T | undefined {
+    const value = this.value.pop();
+    this.setEventDetail('pop', this.value);
     window.dispatchEvent(this.dataChange);
-    return this.value[this.value.length - 1];
-  }
-
-  public forEach() {
-
+    return value;
   }
 
   public splice(index: number, count: number, item?: T) {
-    this.value.splice(index, count);
+    const value = this.value.splice(index, count);
+    this.setEventDetail('splice', this.value);
+    window.dispatchEvent(this.dataChange);
+    return value;
   }
 }
 

@@ -3,8 +3,8 @@
  * show data
  */
 
-import { CoreData } from "../lib";
-import { IDrawData } from "types/common";
+import {IDrawData} from "types/common";
+import {coreData, CoreData, IDataChangeEvent} from "../lib";
 
 export function initRightBar(coreData: CoreData<IDrawData>) {
   const div = document.createElement('div');
@@ -47,7 +47,38 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
     }
   });
 
+  window.addEventListener('dataChange', (e) => {
+    console.log(e);
+    updateList(e as CustomEvent<IDataChangeEvent<IDrawData>>);
+  });
+
   div.appendChild(divBtn);
   div.appendChild(ul);
   document.body.append(div);
+}
+
+
+function updateList(val: CustomEvent<IDataChangeEvent<IDrawData>>) {
+  const ul = document.querySelector<HTMLUListElement>('#right-bar-list');
+  if(ul) {
+    ul.innerHTML = "";
+    coreData.value.forEach((draw, index) => {
+      const {type, lineWidth, color, shape} = draw;
+      const li = document.createElement('li');
+      const txtDom = `
+        <div class="left">
+          <div>${type}</div>
+          <div style="width: 20px;height: 20px;background-color: ${color}"></div>
+        </div>
+        <div class="right">
+          <input ${draw.type === 'txt' ? '': 'disabled' } type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
+          <input type="text" value="${shape}" />
+        </div>
+        <div class="delete" name="delete">x</div>
+      `;
+      li.innerHTML = txtDom;
+      li.setAttribute('data-index', `${index}`);
+      ul.appendChild(li);
+    });
+  }
 }

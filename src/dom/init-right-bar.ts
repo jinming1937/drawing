@@ -50,9 +50,15 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
   ul.addEventListener('input', (e: any) => {
     const val = e.target.value;
     const type = e.target.getAttribute('data-type');
-    const index = parseInt(e.target.parentNode.parentNode.getAttribute('data-index'), 10);
+    const index = searchIndex(e.path);
     const item = coreData.getItem(index);
     switch(type) {
+      case 'color':
+        coreData.setItem(index, {
+          ...item,
+          color: val,
+        });
+        break;
       case 'shape':
         const [startX = 0, startY = 0, endX = 0, endY = 0] = val.split(',');
         coreData.setItem(index, {
@@ -95,7 +101,7 @@ function render(data: IDrawData[]) {
       const txtDom = `
         <div class="input-box">
           <span class="type">${type}</span>
-          <input class="color-box" type="color" value="${color}" />
+          <input class="color-box" type="color" data-type="color" value="${color}" />
           <div class="input-cube">
             <span>position:</span>
             <input ${draw.type === 'txt' ? '': 'disabled' } type="text" data-type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
@@ -124,4 +130,14 @@ function diff(cache: IDrawData[], value: IDrawData[]) {
     }
   });
   return flag;
+}
+
+function searchIndex(nodeList: HTMLElement[]) {
+  let dataIndex = -1;
+  nodeList.forEach((item) => {
+    if(item.nodeName === 'LI' && dataIndex === -1) {
+      dataIndex = parseInt(item.getAttribute('data-index') || '0', 10);
+    }
+  });
+  return dataIndex;
 }

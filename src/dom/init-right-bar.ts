@@ -62,7 +62,7 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
       case 'shape':
         const [startX = 0, startY = 0, endX = 0, endY = 0] = val.split(',');
         const shape = [...item.shape];
-        if([startX, startY, endX, endY].filter(item => /^\d+$/.test(item)).length === 4) {
+        if([startX, startY, endX, endY].filter(item => /^[-]?\d+$/.test(item)).length === 4) {
           shape.length = 0;
           shape.push(parseInt(startX), parseInt(startY), parseInt(endX), parseInt(endY));
         }

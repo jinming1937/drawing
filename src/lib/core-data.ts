@@ -39,12 +39,12 @@ export class CoreData<T> {
       enumerable: true,
       get: () => value,
       set: (val: unknown) => {
-        this.dispatchDataChangeEvent('change-array', val);
         if(typeof val === 'object') {
           value = this.watcher(val)
         } else {
           value = val
         }
+        this.dispatchDataChangeEvent('change-array', val);
       },
     });
   }

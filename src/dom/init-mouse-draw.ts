@@ -101,6 +101,10 @@ function endInput(coreData: CoreData<IDrawData>, inputDom: HTMLTextAreaElement, 
   currentIndex = coreData.length;
 }
 
+function inputing(coreData: CoreData<IDrawData>, inputDom: HTMLTextAreaElement, textareaMask: HTMLDivElement) {
+  (coreData.getItem(currentIndex) as Txt).text = inputDom.value;
+}
+
 /**
  * 绑定事件 & 返回绘画函数
  * @param {Object} ctx canvas context
@@ -146,7 +150,7 @@ export function initMouseDraw(coreData: CoreData<IDrawData>, ctx: CanvasRenderin
       start(coreData, colorDom, lineWidthDom, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
     });
     dom.addEventListener('touchmove', (e: TouchEvent) => {
-      console.log(e.changedTouches.length, e);
+      // console.log(e.changedTouches.length, e);
       if (!drawing) return;
       move(coreData, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
     });
@@ -165,6 +169,7 @@ export function initMouseDraw(coreData: CoreData<IDrawData>, ctx: CanvasRenderin
   }
   let input = ''; // 维护文字输入状态，超长禁止输入
   textarea.addEventListener('keydown', (e: KeyboardEvent) => {
+    // 先keydown，后input
     if (e.key === 'Escape') {
       e.stopPropagation();
       cancelInput();
@@ -178,6 +183,11 @@ export function initMouseDraw(coreData: CoreData<IDrawData>, ctx: CanvasRenderin
     }
     input = (e.target as HTMLTextAreaElement).value;
   });
+
+  textarea.addEventListener('input', (e) => {
+    // 先keydown，后input
+    inputing(coreData, textarea, textareaMask);
+  })
 
   textareaMask.addEventListener('click', (e: MouseEvent) => {
     cancelInput();

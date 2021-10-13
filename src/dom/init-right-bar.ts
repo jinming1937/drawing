@@ -62,9 +62,9 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
       case 'shape':
         const [startX = 0, startY = 0, endX = 0, endY = 0] = val.split(',');
         const shape = [...item.shape];
-        if(/\d+/.test(startX)) {
+        if([startX, startY, endX, endY].filter(item => /^\d+$/.test(item)).length === 4) {
           shape.length = 0;
-          shape.push(startX, startY, endX, endY);
+          shape.push(parseInt(startX), parseInt(startY), parseInt(endX), parseInt(endY));
         }
         coreData.setItem(index, {
           ...item,
@@ -84,7 +84,6 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
   window.addEventListener('dataChange', (e) => {
     if ((e as CustomEvent<IDataChangeEvent<IDrawData>>).detail.target !== 'set') {
     // if (diff(cacheData, coreData.getValue())) {
-      // console.log('re render');
       // cacheData = cacheData.concat(coreData.getValue());
       render(coreData.getValue());
     }
@@ -105,7 +104,7 @@ function render(data: IDrawData[]) {
       const li = document.createElement('li');
       const txtDom = `
         <div class="input-box">
-          <span class="type">${type}</span>
+          <span class="type">${type}(${index})</span>
           <input class="color-box" type="color" data-type="color" value="${color}" />
           <div class="input-cube">
             <span>text:</span>

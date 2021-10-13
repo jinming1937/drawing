@@ -6,7 +6,6 @@ export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidt
   const axisX = domWidth / 2
   const axisY = domHeight / 2
   const [x1, y1, x2, y2] = lines
-
   // const [cX, cY] = [x2 + axisX, y2 + axisY];
 
   ctx.save()
@@ -31,25 +30,26 @@ export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidt
   }
 
   const len = Math.min(Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2)) * 0.1, solid ? 15 : 20);
-  ctx.save()
-  ctx.translate(x2, y2);
-  ctx.rotate(angle);  // y/x -> 应该逆时针旋转
-  ctx.moveTo(0, 0);
-  ctx.lineTo(f * len * 2, len);
-  if (solid) {
-    ctx.lineTo(f * len * 2, -len);
+  {
+    ctx.save()
+    ctx.translate(x2, y2);
+    ctx.rotate(angle);  // y/x -> 应该逆时针旋转
     ctx.moveTo(0, 0);
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-  } else {
-    ctx.moveTo(0, 0);
-    ctx.lineTo(f * len * 2, -len);
-    ctx.strokeStyle = color;
-    ctx.stroke();
+    ctx.lineTo(f * len * 2, len);
+    if (solid) {
+      ctx.lineTo(f * len * 2, -len);
+      ctx.moveTo(0, 0);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    } else {
+      ctx.moveTo(0, 0);
+      ctx.lineTo(f * len * 2, -len);
+      ctx.strokeStyle = color;
+      ctx.stroke();
+    }
+    ctx.restore()
   }
-  ctx.restore()
-
   ctx.strokeStyle = color
   ctx.lineWidth = lineWidth
   ctx.stroke()

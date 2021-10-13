@@ -20,7 +20,8 @@ function show(div: HTMLDivElement) {
 function move(div: HTMLDivElement, e: MouseEvent, axisX: number, axisY: number, needAllInfo: boolean) {
   div.style.left = e.layerX < (BLANK_WIDTH + 10) && e.layerY < BLANK_WIDTH ? `${axisX - BLANK_WIDTH}px` : '0';
   const baseInfo =
-    `axis: [${e.layerX * 2 - axisX}, ${-e.layerY * 2 + axisY}]
+    `cAxis: [${e.layerX * 2 - axisX}, ${e.layerY * 2 - axisY}]
+    axis: [${e.layerX * 2 - axisX}, ${-e.layerY * 2 + axisY}]
     canvas: [${e.layerX * 2}, ${e.layerY * 2}]
     layer: [${e.layerX}, ${e.layerY}]`;
 

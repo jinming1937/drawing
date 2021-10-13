@@ -1,6 +1,6 @@
-import {IShapeType, Pen, Txt} from 'types/common';
+import {IDrawData, IShapeType, Pen, Txt} from 'types/common';
 import {initInputDom, showInput} from './init-input-dom';
-import {bounce, coreData} from '../lib';
+import {bounce, CoreData} from '../lib';
 
 let currentIndex = 0;
 
@@ -18,7 +18,7 @@ function getType(): IShapeType {
   return 'line';
 }
 
-function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
+function start(coreData: CoreData<IDrawData>, colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
   const color = `${colorDom.value || '#ffffff'}`;
   const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
@@ -38,7 +38,7 @@ function start(colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {l
   }
 }
 
-function move(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
+function move(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
   const current = coreData.getItem(currentIndex);
   if (!current || (current.shape.length + ((current as Pen).lines?.length || 0)) === 0) {
@@ -62,7 +62,7 @@ function move(e: {layerX: number, layerY: number}, axisX: number, axisY: number)
   }
 }
 
-function end(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
+function end(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
   const current = coreData.getItem(currentIndex);
   switch(type) {
@@ -89,7 +89,7 @@ function end(e: {layerX: number, layerY: number}, axisX: number, axisY: number) 
  * 结束输入状态
  * @param {Object} inputDom textarea dom
  */
-function endInput(inputDom: HTMLTextAreaElement, textareaMask: HTMLDivElement) {
+function endInput(coreData: CoreData<IDrawData>, inputDom: HTMLTextAreaElement, textareaMask: HTMLDivElement) {
   if (inputDom.value) {
     (coreData.getItem(currentIndex) as Txt).text = inputDom.value;
   } else {
@@ -107,7 +107,7 @@ function endInput(inputDom: HTMLTextAreaElement, textareaMask: HTMLDivElement) {
  * @param {String} type type line
  * @returns Fn Callback
  */
-export function mouseDraw(ctx: CanvasRenderingContext2D) {
+export function initMouseDraw(coreData: CoreData<IDrawData>, ctx: CanvasRenderingContext2D) {
   const dom = ctx.canvas;
   const domWidth = dom.width;
   const domHeight = dom.height;
@@ -120,17 +120,17 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
   let drawing = false;
   dom.addEventListener('mousedown', (e: MouseEvent) => {
     drawing = true;
-    start(colorDom, lineWidthDom, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
+    start(coreData, colorDom, lineWidthDom, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
   });
 
   dom.addEventListener('mousemove', (e: MouseEvent) => {
     if (!drawing) return;
-    move({layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
+    move(coreData, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
   });
 
   dom.addEventListener('mouseup', (e: MouseEvent) => {
     if (!drawing) return;
-    end({layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
+    end(coreData, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
     drawing = false;
   });
   dom.addEventListener('mouseleave', () => {
@@ -143,16 +143,16 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
     // touch
     dom.addEventListener('touchstart', (e: TouchEvent) => {
       drawing = true;
-      start(colorDom, lineWidthDom, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+      start(coreData, colorDom, lineWidthDom, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
     });
     dom.addEventListener('touchmove', (e: TouchEvent) => {
       console.log(e.changedTouches.length, e);
       if (!drawing) return;
-      move({layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+      move(coreData, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
     });
     dom.addEventListener('touchend', (e: TouchEvent) => {
       if (!drawing) return;
-      end({layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+      end(coreData, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
       drawing = false;
     });
     dom.addEventListener('touchcancel', (e: TouchEvent) => {
@@ -185,6 +185,6 @@ export function mouseDraw(ctx: CanvasRenderingContext2D) {
 
   function cancelInput() {
     input = '';
-    endInput(textarea, textareaMask);
+    endInput(coreData, textarea, textareaMask);
   }
 }

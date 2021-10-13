@@ -3,8 +3,8 @@
  * show data
  */
 
-import {IDrawData, Pen, Txt} from "types/common";
-import {coreData, CoreData, IDataChangeEvent} from "../lib";
+import {IDrawData, Txt} from "types/common";
+import {CoreData, IDataChangeEvent} from "../lib";
 
 export function initRightBar(coreData: CoreData<IDrawData>) {
   const div = document.createElement('div');
@@ -61,9 +61,14 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
         break;
       case 'shape':
         const [startX = 0, startY = 0, endX = 0, endY = 0] = val.split(',');
+        const shape = [...item.shape];
+        if(/\d+/.test(startX)) {
+          shape.length = 0;
+          shape.push(startX, startY, endX, endY);
+        }
         coreData.setItem(index, {
           ...item,
-          shape: [startX, startY, endX, endY],
+          shape,
         });
         break;
       case 'text':
@@ -75,7 +80,7 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
     }
   });
 
-  let cacheData: IDrawData[] = [];
+  // let cacheData: IDrawData[] = [];
   window.addEventListener('dataChange', (e) => {
     if ((e as CustomEvent<IDataChangeEvent<IDrawData>>).detail.target !== 'set') {
     // if (diff(cacheData, coreData.getValue())) {
@@ -103,12 +108,12 @@ function render(data: IDrawData[]) {
           <span class="type">${type}</span>
           <input class="color-box" type="color" data-type="color" value="${color}" />
           <div class="input-cube">
-            <span>position:</span>
-            <input ${draw.type === 'txt' ? '': 'disabled' } type="text" data-type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
+            <span>text:</span>
+            <input maxlength="30" ${draw.type === 'txt' ? '': 'disabled'} type="text" data-type="text" value="${draw.type === 'txt' ? draw.text : '-'}" />
           </div>
           <div class="input-cube">
-            <span>text:</span>
-            <input type="text" value="${shape}" data-type="shape" />
+            <span>position:</span>
+            <input maxlength="30" ${draw.type === 'pen' ? 'disabled' : ''} type="text" value="${shape}" data-type="shape" />
           </div>
         </div>
         <div class="delete" name="delete">×</div>
@@ -120,17 +125,17 @@ function render(data: IDrawData[]) {
   }
 }
 
-function diff(cache: IDrawData[], value: IDrawData[]) {
-  console.log(cache, value);
-  if (cache.length !== value.length) return true;
-  let flag = false;
-  value.forEach((item, index) => {
-    if (cache[index].type !== item.type && !flag) {
-      flag = true;
-    }
-  });
-  return flag;
-}
+// function diff(cache: IDrawData[], value: IDrawData[]) {
+//   console.log(cache, value);
+//   if (cache.length !== value.length) return true;
+//   let flag = false;
+//   value.forEach((item, index) => {
+//     if (cache[index].type !== item.type && !flag) {
+//       flag = true;
+//     }
+//   });
+//   return flag;
+// }
 
 function searchIndex(nodeList: HTMLElement[]) {
   let dataIndex = -1;

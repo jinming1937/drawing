@@ -1,6 +1,6 @@
 import {IDrawData, Pen, Txt} from 'types/common';
 import {animate} from './util/animate';
-import {axisTips, initCanvas, mouseDraw, initKey, initExportPicture, initExportData, initImportJSON, initRemote, initClear, initRightBar} from './dom';
+import {axisTips, initCanvas, initMouseDraw, initKey, initExportPicture, initExportData, initImportJSON, initRemote, initClear, initRightBar} from './dom';
 import {setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
 import {calculateMatrix, calculate3D, cal, createMatrix, coreData} from './lib';
 
@@ -42,7 +42,8 @@ function getStrMatrix(ctx: CanvasRenderingContext2D) {
 }
 
 
-const cacheData: IDrawData[] = [];
+export const cacheData: IDrawData[] = [];
+export const drawData = coreData.value;
 
 function Main(w: Window) {
   console.log('window load ok, start js!!!');
@@ -52,7 +53,7 @@ function Main(w: Window) {
   axisTips(canvas); // 坐标提示
   setBackground(context, themeDom.value); // bg
   initExportPicture(canvas); // 绑定导出图片
-  initExportData(w);
+  initExportData(coreData, w);
   initImportJSON((val: IDrawData[]) => {
     coreData.push(...val);
   });
@@ -77,11 +78,11 @@ function Main(w: Window) {
     cacheData.length = 0;
   });
 
-  mouseDraw(context); // 绑定事件
+  initMouseDraw(coreData, context); // 绑定事件
 
   {
     // 绘画操作的前进、后退
-    initKey(window, function(action: 'back' | 'forward') {
+    initKey(window, (action: 'back' | 'forward') => {
       switch(action) {
         case 'back':
           // command + z, 执行
@@ -147,9 +148,4 @@ function Main(w: Window) {
 
 window.onload = () => {
   Main(window);
-}
-
-export const drawData = coreData.value;
-export {
-  cacheData,
 }

@@ -1,5 +1,5 @@
 import {IDrawData} from '../../types/common';
-import {coreData} from '../lib';
+import {CoreData} from 'src/lib';
 
 
 function exportRaw(w: Window, name: string, data: string) {
@@ -27,7 +27,7 @@ function filterData(data: IDrawData[]) {
   })
 }
 
-export function initExportData(w: Window) {
+export function initExportData(coreData: CoreData<IDrawData>, w: Window) {
   const dom = document.getElementById('export-data');
   if (dom) {
     dom.addEventListener('click', () => {

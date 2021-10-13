@@ -1,5 +1,6 @@
-import { IDrawData } from '.';
-import {drawData} from './mouse-draw';
+import {IDrawData} from '../../types/common';
+import {CoreData} from 'src/lib';
+
 
 function exportRaw(w: Window, name: string, data: string) {
   const urlObject = URL;
@@ -26,11 +27,11 @@ function filterData(data: IDrawData[]) {
   })
 }
 
-export function initExportData(w: Window) {
+export function initExportData(coreData: CoreData<IDrawData>, w: Window) {
   const dom = document.getElementById('export-data');
   if (dom) {
     dom.addEventListener('click', () => {
-      const simpleData = filterData(drawData);
+      const simpleData = filterData(coreData.value);
       exportRaw(w, `draw_data_${+new Date()}.json`, JSON.stringify(simpleData));
     });
   }

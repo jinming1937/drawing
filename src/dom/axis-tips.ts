@@ -1,4 +1,6 @@
 /**
+ * left top or right top tip
+ *
  * layer: 元素级别, 元素左上角 0,0
  * offset: 元素级别, 元素左上角 0,0
  * client: document级别, 文档左上角 0,0
@@ -18,7 +20,8 @@ function show(div: HTMLDivElement) {
 function move(div: HTMLDivElement, e: MouseEvent, axisX: number, axisY: number, needAllInfo: boolean) {
   div.style.left = e.layerX < (BLANK_WIDTH + 10) && e.layerY < BLANK_WIDTH ? `${axisX - BLANK_WIDTH}px` : '0';
   const baseInfo =
-    `axis: [${e.layerX * 2 - axisX}, ${-e.layerY * 2 + axisY}]
+    `cAxis: [${e.layerX * 2 - axisX}, ${e.layerY * 2 - axisY}]
+    axis: [${e.layerX * 2 - axisX}, ${-e.layerY * 2 + axisY}]
     canvas: [${e.layerX * 2}, ${e.layerY * 2}]
     layer: [${e.layerX}, ${e.layerY}]`;
 
@@ -56,8 +59,6 @@ export function axisTips(dom: HTMLCanvasElement, needAllInfo = false) {
   div.style.width = `${BLANK_WIDTH}px`;
   div.style.lineHeight = '14px';
   div.style.textAlign = 'left';
-  // const _text = document.createTextNode('');
-  // div.appendChild(_text);
   dom.parentNode?.appendChild(div);
   dom.addEventListener('mouseover', (e: MouseEvent) => {
     show(div);

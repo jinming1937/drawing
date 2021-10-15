@@ -45,7 +45,7 @@ const config: Configuration = {
             }
           }
         ],
-        include: [resolve('src')],
+        include: [resolve('src'), resolve('types')],
         exclude: [resolve('node_modules')]
       },
       {

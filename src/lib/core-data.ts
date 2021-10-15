@@ -1,4 +1,3 @@
-import {IDrawData} from "types/common";
 
 export type IDataChangeEvent<T> = {
   target: string;
@@ -8,8 +7,10 @@ export type IDataChangeEvent<T> = {
 export class CoreData<T> {
   value: T[];
   dataChange: CustomEvent;
+  useWatcher: boolean;
   constructor() {
     this.value = [];
+    this.useWatcher = false;
     this.dataChange = new CustomEvent<IDataChangeEvent<T>>('dataChange', {
       bubbles: false,
       cancelable: true,
@@ -21,6 +22,7 @@ export class CoreData<T> {
   }
 
   private watcher(obj: any): T {
+    if (!this.useWatcher) return obj;
     Object.keys(obj).forEach((key) => {
       if (typeof obj[key] === 'object') {
         this.define(obj, key); // 监控
@@ -117,5 +119,3 @@ export class CoreData<T> {
     return value;
   }
 }
-
-export const coreData = new CoreData<IDrawData>();

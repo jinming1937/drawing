@@ -11,7 +11,6 @@
 */
 
 const BLANK_WIDTH = 130;
-const ID = 'sub-tips';
 
 function show(div: HTMLDivElement) {
   div.style.display = 'block';
@@ -45,11 +44,8 @@ function hide(div: HTMLDivElement) {
  */
 export function axisTips(dom: HTMLCanvasElement, needAllInfo = false) {
   const div = document.createElement('div');
-  const domWidth = dom.width;
-  const domHeight = dom.height;
-  const axisX = domWidth / 2;
-  const axisY = domHeight / 2;
-  div.setAttribute('id', ID)
+  const axisX = dom.width / 2;
+  const axisY = dom.height / 2;
   div.style.position = 'absolute';
   div.style.top = '0';
   div.style.left = '0';
@@ -60,13 +56,16 @@ export function axisTips(dom: HTMLCanvasElement, needAllInfo = false) {
   div.style.lineHeight = '14px';
   div.style.textAlign = 'left';
   dom.parentNode?.appendChild(div);
-  dom.addEventListener('mouseover', (e: MouseEvent) => {
+  dom.addEventListener('mouseover', () => {
     show(div);
   });
   dom.addEventListener('mousemove', (e: MouseEvent) => {
     move(div, e, axisX, axisY, needAllInfo)
   });
-  dom.addEventListener('mouseout', (e: MouseEvent) => {
+  dom.addEventListener('mouseout', () => {
+    hide(div);
+  });
+  dom.addEventListener('mouseleave', () => {
     hide(div);
   });
 }

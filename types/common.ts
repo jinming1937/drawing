@@ -1,5 +1,5 @@
 
-export type IShapeType = 'line' | 'rect' | 'pen' | 'txt' | 'arrow';
+export type IShapeType = 'line' | 'rect' | 'pen' | 'txt' | 'arrow' | 'hand';
 
 export type Pen = {
   type: 'pen';
@@ -7,6 +7,7 @@ export type Pen = {
   lineWidth: number;
   shape: number[];
   lines: Array<number[]>;
+  isActive?: boolean;
 }
 
 export type Common = {
@@ -14,6 +15,7 @@ export type Common = {
   color: string;
   lineWidth: number;
   shape: number[];
+  isActive?: boolean;
 }
 
 export type Txt = {
@@ -22,6 +24,7 @@ export type Txt = {
   lineWidth: number;
   shape: number[];
   text: string;
+  isActive?: boolean;
 }
 
 export type IDrawData = Common | Pen | Txt;

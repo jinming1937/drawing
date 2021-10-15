@@ -1,5 +1,5 @@
 
-export  function drawLineRect(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[]) {
+export  function drawLineRect(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[], isActive?: boolean) {
     if (lines.length < 0) return;
     const dom = ctx.canvas;
     const domWidth = dom.width;

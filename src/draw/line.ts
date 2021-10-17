@@ -1,10 +1,13 @@
+import {lineRectPath} from '../canvas/ctx-calc'
+import {select} from './select'
+
 /**
  * 画线段
  * @param {Object} ctx canvas context
  * @param {Array} lines line array
  * @returns
  */
-export function drawLine(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[]) {
+export function drawLine(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[], isActive?: boolean) {
   if (lines.length < 0) return
   const dom = ctx.canvas
   const domWidth = dom.width
@@ -22,4 +25,9 @@ export function drawLine(ctx: CanvasRenderingContext2D, color: string, lineWidth
   ctx.closePath()
   ctx.stroke()
   ctx.restore()
+  if(isActive) {
+    select(ctx, [axisX, axisY], () => {
+      lineRectPath(ctx, x1, y1, x2, y2);
+    });
+  }
 }

@@ -42,10 +42,11 @@ export function initInputDom(colorDom: HTMLInputElement): [HTMLTextAreaElement, 
 * 展示文本输入
 * @param {number} x x position
 * @param {number} y y position
+* @param {string} value value string
 */
-export function showInput(x: number, y: number) {
+export function showInput(x: number, y: number, value?: string) {
  const colorDom = document.getElementById('color') as HTMLInputElement;
- const textarea = document.getElementById('textarea-input');
+ const textarea = document.getElementById('textarea-input') as HTMLTextAreaElement;
  const textareaMask = document.getElementById('textarea-mask');
  if (textareaMask) textareaMask.style.display = 'block';
  if (textarea) {
@@ -53,6 +54,7 @@ export function showInput(x: number, y: number) {
    textarea.style.left = `${x}px`;
    textarea.style.top = `${y - 17}px`;
    textarea.style.color = colorDom.value;
-   textarea.focus();
+   textarea.value = value || '';
+   setTimeout(() => textarea.focus(), 0)
  }
 }

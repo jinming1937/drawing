@@ -1,4 +1,8 @@
-export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[], solid: boolean = false) {
+import {lineRectPath} from '../canvas/ctx-calc';
+import {select} from './select';
+
+export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidth: number, lines: number[], isActive?: boolean) {
+  const solid = false;
   if (lines.length < 4) return
   const dom = ctx.canvas
   const domWidth = dom.width
@@ -50,8 +54,14 @@ export function drawArrow(ctx: CanvasRenderingContext2D, color: string, lineWidt
     }
     ctx.restore()
   }
+
   ctx.strokeStyle = color
   ctx.lineWidth = lineWidth
   ctx.stroke()
   ctx.restore()
+  if(isActive) {
+    select(ctx, [axisX, axisY], () => {
+      lineRectPath(ctx, x1, y1, x2, y2);
+    });
+  }
 }

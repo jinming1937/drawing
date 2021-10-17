@@ -1,8 +1,8 @@
 import {IDrawData, Pen, Txt} from 'types/common';
-import {animate} from './util/animate';
-import {axisTips, initCanvas, initMouseDraw, initKey, initExportPicture, initExportData, initImportJSON, initRemote, initClear, initRightBar} from './dom';
+import {calculateMatrix, calculate3D, cal, createMatrix, CoreData} from './lib';
+import {createApp, createToolBar} from './app';
+import {animate} from './util';
 import {setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
-import {calculateMatrix, calculate3D, cal, createMatrix, coreData} from './lib';
 
 function getNumMatrix(ctx: CanvasRenderingContext2D) {
   const startLeft: [number, number] = [-300 , -100];
@@ -41,65 +41,15 @@ function getStrMatrix(ctx: CanvasRenderingContext2D) {
   return [leftMatrix, rightMatrix, resultMatrix];
 }
 
-
-export const cacheData: IDrawData[] = [];
-export const drawData = coreData.value;
-
-function Main(w: Window) {
+function Main() {
   console.log('window load ok, start js!!!');
   const themeDom = document.getElementById('theme') as HTMLInputElement;
-  const [context, canvas] = initCanvas('brick-app', window.innerWidth, window.innerHeight);
-  if (!context) return;
-  axisTips(canvas); // 坐标提示
+  // 注册canvas, 离屏canvas
+  const [context, canvas, osCvs] = createApp({width: window.innerWidth, height: window.innerHeight, dpr: 2});
+  // 初始化数据管理
+  const coreData = new CoreData<IDrawData>();
+  createToolBar(canvas, coreData, osCvs);
   setBackground(context, themeDom.value); // bg
-  initExportPicture(canvas); // 绑定导出图片
-  initExportData(coreData, w);
-  initImportJSON((val: IDrawData[]) => {
-    coreData.push(...val);
-  });
-  initRightBar(coreData);
-
-  initRemote((fileName: string) => {
-    if(fileName) {
-      const name = window.encodeURIComponent(fileName);
-      const url = `http://file.auoqu.com/v1/${name}`;
-      window.fetch(url).then((res) => {
-        return res.json();
-      }).then(function(json) {
-        if (Array.isArray(json) && json.length > 0) {
-          coreData.push(...json);
-        }
-      });
-    }
-  });
-
-  initClear(() => {
-    coreData.clear();
-    cacheData.length = 0;
-  });
-
-  initMouseDraw(coreData, context); // 绑定事件
-
-  {
-    // 绘画操作的前进、后退
-    initKey(window, (action: 'back' | 'forward') => {
-      switch(action) {
-        case 'back':
-          // command + z, 执行
-          if (coreData.length > 0) {
-            const shape = coreData.pop();
-            if (shape) cacheData.push(shape);
-          }
-          break;
-        case 'forward':
-          if (cacheData.length > 0) {
-            const shape = cacheData.pop();
-            if (shape) coreData.push(shape);
-          }
-          break;
-      }
-    });
-  }
 
   // const allMatrix = getNumMatrix(context);
   // const allMatrix = getStrMatrix(context);
@@ -125,27 +75,35 @@ function Main(w: Window) {
     // });
 
     coreData.value.forEach((item) => {
-      const {type, color, lineWidth, shape} = item;
+      const {type, color, lineWidth, shape, isActive = false} = item;
       switch(type) {
         case 'line':
-          drawLine(context, color, lineWidth, shape);
+          drawLine(context, color, lineWidth, shape, isActive);
           break;
         case 'rect':
-          drawLineRect(context, color, lineWidth, shape);
+          drawLineRect(context, color, lineWidth, shape, isActive);
           break;
         case 'pen':
-          drawPen(context, color, lineWidth, (item as Pen).lines);
+          drawPen(context, color, lineWidth, (item as Pen).lines, isActive);
           break;
         case 'txt':
-          drawText(context, color, (item as Txt).text || '', shape);
+          drawText(context, color, (item as Txt).text || '', shape, isActive);
           break;
         case 'arrow':
-          drawArrow(context, color, lineWidth, shape);
+          drawArrow(context, color, lineWidth, shape, isActive);
       }
     })
   });
+  return coreData;
+}
+
+const globalData = {
+  coreData: [] as unknown as CoreData<IDrawData>,
 }
 
 window.onload = () => {
-  Main(window);
-}
+  globalData.coreData = Main();
+  window.coreData = globalData.coreData;
+};
+
+export default globalData;

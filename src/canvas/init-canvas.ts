@@ -5,8 +5,7 @@
  * @param {Number} height canvas height
  * @returns canvas context
  */
-export function initCanvas(canvasElementId: string, width: number = 680, height: number = 480): [CanvasRenderingContext2D | null, HTMLCanvasElement] {
-  const dpr = 2; // window.devicePixelRatio
+export function initCanvas(canvasElementId: string, width: number = 680, height: number = 480, dpr: number): [CanvasRenderingContext2D, HTMLCanvasElement] {
   let canvasElement = window.document.getElementById(canvasElementId) as HTMLCanvasElement
   if (!canvasElement) {
     canvasElement = document.createElement('canvas')
@@ -22,7 +21,8 @@ export function initCanvas(canvasElementId: string, width: number = 680, height:
   if (context) {
     return [context, canvasElement]
   } else {
-    alert('error: can not create context!!!')
-    return [null, canvasElement]
+    throw('error: create canvas context fail!');
+    // alert('error: can not create context!!!')
+    // return [null, canvasElement]
   }
 }

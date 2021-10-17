@@ -6,11 +6,12 @@ import {IShapeType} from "types/common";
  */
  export function getType(): IShapeType {
   const dom = document.querySelectorAll('input[name="shape"]');
-  if((dom[0] as HTMLInputElement).checked) return 'line';
-  if((dom[1] as HTMLInputElement).checked) return 'rect';
-  if((dom[2] as HTMLInputElement).checked) return 'pen';
-  if((dom[3] as HTMLInputElement).checked) return 'txt';
-  if((dom[4] as HTMLInputElement).checked) return 'arrow';
-  if((dom[5] as HTMLInputElement).checked) return 'hand';
-  return 'line';
+  let type: IShapeType = 'line';
+  dom.forEach((item) => {
+    const domInput = item as HTMLInputElement;
+    if(domInput.checked) {
+      type = domInput.value as IShapeType;
+    }
+  });
+  return type;
 }

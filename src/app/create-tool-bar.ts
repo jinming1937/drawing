@@ -44,7 +44,7 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
 
   {
     // 注册键盘事件，绘画操作的前进、后退
-    initKey(window, (action: 'back' | 'forward') => {
+    initKey(window, (action: 'back' | 'forward' | 'select_all') => {
       switch(action) {
         case 'back':
           // command + z, 执行
@@ -58,6 +58,11 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
             const shape = cacheData.pop();
             if (shape) coreData.push(shape);
           }
+          break;
+        case 'select_all':
+          coreData.getValue().forEach((item) => {
+            item.isActive = true;
+          });
           break;
       }
     });

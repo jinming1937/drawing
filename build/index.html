@@ -16,8 +16,10 @@
       <span class="txt">导入数据</span>
       <input type="file" name="import-data" id="import-data" accept=".json,application/json"></label>
     <label class="btn line">
-      线段:
-      <input type="radio" name="shape" id="line" value="line" checked>
+      选择:
+      <input type="radio" name="shape" id="hand" value="hand" checked>
+      | 线段:
+      <input type="radio" name="shape" id="line" value="line">
       | 矩形:
       <input type="radio" name="shape" id="rect" value="rect">
       | 画笔:
@@ -26,8 +28,6 @@
       <input type="radio" name="shape" id="txt" value="txt">
       | 箭头:
       <input type="radio" name="shape" id="arrow" value="arrow">
-      | 选择:
-      <input type="radio" name="shape" id="hand" value="hand">
     </label>
     <input class="color" type="color" value="#ffffff" name="color" id="color">
     <select class="select-round-rect" name="line-width" id="lineWidth" value="2">

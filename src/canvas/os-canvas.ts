@@ -19,6 +19,12 @@ export class OffScreenCanvas {
     const canvas = document.createElement('canvas');
     canvas.style.width = `${screenWidth}px`;
     canvas.style.height = `${screenHeight}px`;
+    // canvas.style.position = 'absolute';
+    // canvas.style.top = '0';
+    // canvas.style.left = '0';
+    // canvas.style.zIndex = '1000';
+    // canvas.style.background = 'rgb(255 232 200 / 25%)';
+    // canvas.style.pointerEvents = 'none';
     canvas.width = screenWidth * dpr;
     canvas.height = screenHeight * dpr;
     this.canvas = canvas;
@@ -28,8 +34,12 @@ export class OffScreenCanvas {
     } else {
       throw('error');
     }
+    // this.ctx.translate(screenWidth, screenHeight);
+    this.ctx.strokeStyle = '#fff';
+    this.ctx.lineWidth = 1;
     this.width = screenWidth * dpr;
     this.height = screenHeight * dpr;
+    // document.getElementById('brick-app')?.parentNode?.appendChild(canvas);
   }
 }
 

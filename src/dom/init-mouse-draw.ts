@@ -85,7 +85,6 @@ const current_position = {
 };
 
 function start(coreData: CoreData<IDrawData>, osCtx: CanvasRenderingContext2D, colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
-  // console.log('mouse down');
   const type = getType();
   const color = `${colorDom.value || '#ffffff'}`;
   const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
@@ -185,10 +184,12 @@ function end(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number},
         // current.isActive = false;
         coreData.splice(currentIndex, 1);
         coreData.push(current);
+        currentIndex = coreData.length - 1;
       } else {
         coreData.getValue().forEach((item) => item.isActive = false); // 没有选中，去掉所有选中态
+        currentIndex = coreData.length;
       }
-      break;
+      return;
   }
   currentIndex = coreData.length;
 }
@@ -229,6 +230,7 @@ export function initMouseDraw(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas,
     drawing = false;
   });
   canvas.addEventListener('dblclick', (e: MouseEvent) => {
+    // console.log('dbl click');
     const saveX1 = e.layerX * 2 - axisX;
     const saveY1 = e.layerY * 2 - axisY;
     currentIndex = getSelectorIndex(coreData, osCvs.ctx, colorDom, saveX1, saveY1);
@@ -268,17 +270,18 @@ export function initMouseDraw(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas,
     }, {passive: false});
   }
   colorDom.addEventListener('input', (e) => {
-    console.log(e);
-    const current = coreData.getItem(currentIndex);
-    if(current) {
-      current.color = colorDom.value || '#fff';
-    }
+    coreData.getValue().forEach((item) => {
+      if(item.isActive) {
+        item.color = colorDom.value || '#fff';
+      }
+    });
   });
   lineWidthDom.addEventListener('change', (e) => {
-    const current = coreData.getItem(currentIndex);
-    if(current) {
-      current.lineWidth = parseInt(lineWidthDom.value, 10);
-    }
+    coreData.getValue().forEach((item) => {
+      if(item.isActive) {
+        item.lineWidth = parseInt(lineWidthDom.value, 10);
+      }
+    });
   });
   let input = ''; // 维护文字输入状态，超长禁止输入
   textarea.addEventListener('keydown', (e: KeyboardEvent) => {

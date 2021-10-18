@@ -6,50 +6,67 @@ import {initInputDom, showInput} from './init-input-dom';
 import {getType} from './get-type';
 import {isPointInPath, createRectPath, lineRectPath, penRectPath, txtRectPath} from '../canvas/ctx-calc';
 
+/**
+ * 查找点击到的面积最小的元素（图形）
+ *
+ * @param {CoreData<IDrawData>} coreData data array
+ * @param {CanvasRenderingContext2D} ctx ctx
+ * @param {HTMLInputElement} colorDom color dom
+ * @param {number} aimX1 click x
+ * @param {number} aimY1 click y
+ * @returns {number} index
+ */
 function getSelectorIndex(coreData: CoreData<IDrawData>, ctx: CanvasRenderingContext2D, colorDom: HTMLInputElement, aimX1: number, aimY1: number): number {
   let currentIndex = -1
   let index = coreData.length;
+  let area = [ctx.canvas.width, ctx.canvas.height];
   while(index--) {
     const item = coreData.getValue()[index]; // 倒序遍历
     const [x1, y1, x2, y2] = item.shape;
     let isGetElement = false;
     {
-      ctx.beginPath();
+      // ctx.beginPath();
+      let rect = [0, 0];
       switch(item.type) {
         case 'arrow':
         case 'line':
-          lineRectPath(ctx, x1, y1, x2, y2);
+          rect = lineRectPath(ctx, x1, y1, x2, y2);
           isGetElement = ctx.isPointInPath(aimX1, aimY1);
           break;
         case 'rect':
-          createRectPath(ctx, x1, y1, Math.abs(x2 - x1), Math.abs(y2 - y1));
+          rect = createRectPath(ctx, x1, y1, Math.abs(x2 - x1), Math.abs(y2 - y1));
           isGetElement = ctx.isPointInPath(aimX1, aimY1);
           break;
         case 'txt':
-          txtRectPath(ctx, item.text, x1, y1);
+          rect = txtRectPath(ctx, item.text, x1, y1);
           isGetElement = ctx.isPointInPath(aimX1, aimY1);
           break;
         case 'pen':
-          penRectPath(ctx, item.lines)
+          rect = penRectPath(ctx, item.lines)
           isGetElement = ctx.isPointInPath(aimX1, aimY1);
           break;
       }
-      ctx.stroke();
-      if (isGetElement) { // 命中
+      // ctx.stroke();
+      if (isGetElement && rect[0] * rect[1] < area[0] * area[1]) { // 命中 && 面积较小
         currentIndex = index;
+        area[0] = rect[0];
+        area[1] = rect[1];
         // console.log(currentIndex);
-        current_position.x = aimX1;
-        current_position.y = aimY1;
-        current_position.baseX1 = item.shape[0];
-        current_position.baseY1 = item.shape[1];
-        current_position.baseX2 = item.shape[2];
-        current_position.baseY2 = item.shape[3];
-        current_position.lines = (item as Pen).lines;
-        colorDom.value = item.color
-        item.isActive = true;
-        index = 0; // 退出循环
+        // index = 0; // 退出循环
       }
     }
+  }
+  const vItem = coreData.getItem(currentIndex)
+  if(vItem) {
+    current_position.x = aimX1;
+    current_position.y = aimY1;
+    current_position.baseX1 = vItem.shape[0];
+    current_position.baseY1 = vItem.shape[1];
+    current_position.baseX2 = vItem.shape[2];
+    current_position.baseY2 = vItem.shape[3];
+    current_position.lines = (vItem as Pen).lines;
+    colorDom.value = vItem.color
+    vItem.isActive = true;
   }
   return currentIndex;
 }
@@ -182,13 +199,13 @@ function end(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number},
         current_position.x = 0;
         current_position.y = 0;
         // current.isActive = false;
-        {
+        // {
           // 选中后，选中的元素移到array最后：因为可能会出现移动元素到另一个大区域上，而目前又是倒叙遍历的，所以这个元素再次获取时应该优先拾取
           // 是否应该这样：点击之后，先把所有匹配元素找到，再根据最小面积元素判断为目标拾取对象
-          coreData.splice(currentIndex, 1);
-          coreData.push(current);
-        }
-        currentIndex = coreData.length - 1;
+          // coreData.splice(currentIndex, 1);
+          // coreData.push(current);
+        // }
+        // currentIndex = coreData.length - 1;
       } else {
         coreData.getValue().forEach((item) => item.isActive = false); // 没有选中，去掉所有选中态
         currentIndex = coreData.length;

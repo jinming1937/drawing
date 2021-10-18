@@ -7,6 +7,7 @@ import {IDrawData} from "types/common";
  */
 export function washData(data: IDrawData[]): IDrawData[] {
   return data.filter((item) => {
+    delete item.isActive;
     switch(item.type) {
       case 'txt':
         return !!item.text; // text 不为空

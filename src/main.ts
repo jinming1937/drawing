@@ -103,7 +103,7 @@ const globalData = {
 
 window.onload = () => {
   globalData.coreData = Main();
-  window.coreData = globalData.coreData;
+  // window.coreData = globalData.coreData;
 };
 
 export default globalData;

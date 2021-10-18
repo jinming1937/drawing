@@ -182,8 +182,12 @@ function end(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number},
         current_position.x = 0;
         current_position.y = 0;
         // current.isActive = false;
-        coreData.splice(currentIndex, 1);
-        coreData.push(current);
+        {
+          // 选中后，选中的元素移到array最后：因为可能会出现移动元素到另一个大区域上，而目前又是倒叙遍历的，所以这个元素再次获取时应该优先拾取
+          // 是否应该这样：点击之后，先把所有匹配元素找到，再根据最小面积元素判断为目标拾取对象
+          coreData.splice(currentIndex, 1);
+          coreData.push(current);
+        }
         currentIndex = coreData.length - 1;
       } else {
         coreData.getValue().forEach((item) => item.isActive = false); // 没有选中，去掉所有选中态

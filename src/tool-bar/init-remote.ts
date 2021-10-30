@@ -11,7 +11,7 @@ export function initRemote(fun: (name: string) => void) {
       json.forEach((item) => {
         const option = document.createElement('option');
         option.innerText = item.label;
-        option.value = item.value;
+        option.value = item.url;
         dom?.appendChild(option);
       })
     }

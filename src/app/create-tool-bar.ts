@@ -19,10 +19,9 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
     coreData.push(...val);
   });
   // 注册拉取远程
-  initRemote((fileName: string) => {
-    if(fileName) {
-      const name = window.encodeURIComponent(fileName);
-      const url = `http://file.auoqu.com/v1/${name}`;
+  initRemote((url: string) => {
+    if(url) {
+      // const url = `http://file.auoqu.com/v1/${name}`;
       window.fetch(url).then((res) => {
         return res.json();
       }).then(function(json) {

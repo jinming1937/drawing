@@ -1,5 +1,6 @@
 import {IDrawData} from "types/common";
-import {CoreData} from "../lib";
+import {backOnceCacheData, backOnceCoreData, copyData, deleteData, KeyEventName, parseData} from '../util';
+import {CoreData, EventCenter} from "../lib";
 import {OffScreenCanvas} from "../canvas";
 import {axisTips, initRightBar, initMouseDraw, initKey} from "../dom";
 import {initClear, initExportPicture, initExportData, initImportJSON, initRemote} from '../tool-bar';
@@ -32,7 +33,9 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
     }
   });
 
+  /** 保存【删除】，以便回退 */
   const cacheData: IDrawData[] = [];
+  const cacheCopyData: IDrawData[] = [];
   // 注册清除事件回调
   initClear(() => {
     coreData.clear();
@@ -43,25 +46,40 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
 
   {
     // 注册键盘事件，绘画操作的前进、后退
-    initKey(window, (action: 'back' | 'forward' | 'select_all') => {
+    initKey(window, (action: KeyEventName) => {
       switch(action) {
-        case 'back':
-          // command + z, 执行
-          if (coreData.length > 0) {
-            const shape = coreData.pop();
-            if (shape) cacheData.push(shape);
-          }
+        case KeyEventName.back:
+          const state = backOnceCacheData(cacheData, coreData);
+          if(state) return;
+          backOnceCoreData(coreData, cacheData);
           break;
-        case 'forward':
-          if (cacheData.length > 0) {
-            const shape = cacheData.pop();
-            if (shape) coreData.push(shape);
-          }
+        case KeyEventName.forward:
+          backOnceCacheData(cacheData, coreData);
           break;
-        case 'select_all':
+        case KeyEventName.selectAll:
           coreData.getValue().forEach((item) => {
             item.isActive = true;
           });
+          break;
+        case KeyEventName.delete:
+          deleteData(coreData, cacheData)
+          break;
+        case KeyEventName.copy:
+          const data = copyData(coreData, cacheCopyData);
+          console.log(data.length);
+          break;
+        case KeyEventName.parse:
+          parseData(coreData, cacheCopyData);
+          break;
+        case KeyEventName.save:
+          EventCenter.keyEvent.detail.value = KeyEventName.save;
+          EventCenter.keyEvent.detail.target = KeyEventName.save;
+          window.dispatchEvent(EventCenter.keyEvent);
+          break;
+        case KeyEventName.changeType:
+          // EventCenter.keyEvent.detail.value = KeyEventName.save;
+          // EventCenter.keyEvent.detail.target = KeyEventName.save;
+          // window.dispatchEvent(EventCenter.keyEvent);
           break;
       }
     });

@@ -18,7 +18,7 @@ export enum KeyEventName {
   shear = 'shear',
   /** 清空 */
   clear = 'clear',
-  /** 切换输入模式: 1选择，2 */
+  /** 切换输入模式: 1从右往左，2从左往右 */
   changeType = 'changeType',
   /** 删除 */
   delete = 'delete',

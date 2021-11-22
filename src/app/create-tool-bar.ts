@@ -3,7 +3,7 @@ import {backOnceCacheData, backOnceCoreData, copyData, deleteData, KeyEventName,
 import {CoreData, EventCenter} from "../lib";
 import {OffScreenCanvas} from "../canvas";
 import {axisTips, initRightBar, initMouseDraw, initKey} from "../dom";
-import {initClear, initExportPicture, initExportData, initImportJSON, initRemote} from '../tool-bar';
+import {initClear, initExportPicture, initExportData, initImportJSON, initRemote, initInputType} from '../tool-bar';
 
 /**
  *
@@ -43,10 +43,10 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
   });
   // 注册canvas各种事件
   initMouseDraw(canvas, osCvs, coreData); // 绑定事件
-
+  initInputType();
   {
     // 注册键盘事件，绘画操作的前进、后退
-    initKey(window, (action: KeyEventName) => {
+    initKey(window, (action: KeyEventName, key: '1'|'2'|'ArrowRight'|'ArrowLeft') => {
       switch(action) {
         case KeyEventName.back:
           const state = backOnceCacheData(cacheData, coreData);
@@ -70,6 +70,7 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
           break;
         case KeyEventName.parse:
           parseData(coreData, cacheCopyData);
+          console.log(coreData.length);
           break;
         case KeyEventName.save:
           EventCenter.keyEvent.detail.value = KeyEventName.save;
@@ -77,9 +78,9 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
           window.dispatchEvent(EventCenter.keyEvent);
           break;
         case KeyEventName.changeType:
-          // EventCenter.keyEvent.detail.value = KeyEventName.save;
-          // EventCenter.keyEvent.detail.target = KeyEventName.save;
-          // window.dispatchEvent(EventCenter.keyEvent);
+          EventCenter.changeInputType.detail.value = key;
+          EventCenter.changeInputType.detail.target = KeyEventName.changeType;
+          window.dispatchEvent(EventCenter.changeInputType);
           break;
       }
     });

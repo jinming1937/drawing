@@ -5,12 +5,13 @@ import {KeyEventName} from '../util';
  */
 export function initKey(w: Window, fn: Function) {
   w.addEventListener('keydown', (e: KeyboardEvent) => {
-    console.log(e);
     if (document.getElementById('textarea-input')?.style.display === 'block') {
       // 文字输入状态时，返回（因为输入框那里阻止冒泡会扰乱文字操作，所以在这里阻止）
       // 退出事件也是在 textarea 那里注册
       return;
     }
+    e.preventDefault();
+    e.stopPropagation();
     if (e.metaKey || e.ctrlKey) { // windows ctrl 或者 Mac meta
       switch(e.key) {
         case 'a':
@@ -39,9 +40,11 @@ export function initKey(w: Window, fn: Function) {
           break;
         case '1':
         case '2':
-        case '3':
-        case '4':
-        case '5':
+        case 'ArrowLeft':
+        case 'ArrowRight':
+        // case '3':
+        // case '4':
+        // case '5':
           if (e.shiftKey) {
             fn(KeyEventName.changeType, e.key);
           }

@@ -1,5 +1,6 @@
-import {CoreData} from 'src/lib';
+import {CoreData} from '../lib';
 import {IDrawData} from 'types/common';
+import {copy} from './copy';
 
 /**
  * 后退
@@ -58,7 +59,7 @@ export function deleteData(coreData: CoreData<IDrawData>, cacheData: IDrawData[]
 export function copyData(coreData: CoreData<IDrawData>, cacheCopyData: IDrawData[]) {
   coreData.getValue().forEach((item) => {
     if (item.isActive) {
-      cacheCopyData.push(item);
+      cacheCopyData.push(copy(item));
     }
   });
   return cacheCopyData;
@@ -68,18 +69,21 @@ export function parseData(coreData: CoreData<IDrawData>, cacheCopyData: IDrawDat
   cacheCopyData.forEach((item) => {
     switch(item.type) {
       case 'pen':
-        item.lines.forEach((i) => {
-          i[0] += 10;
-          i[1] += 10;
+        item.lines.forEach((i, index) => {
+          item.lines[index][0] += 10;
+          item.lines[index][1] += 10;
         })
         break;
       case 'line':
       case 'rect':
       case 'arrow':
       case 'txt':
-        item.shape.forEach((i) => i += 10);
+        item.shape.forEach((i, index) => {
+          item.shape[index] += 10;
+        });
+        // cache.push(item);
         break;
     }
     coreData.push(item);
-  })
+  });
 }

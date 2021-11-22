@@ -74,7 +74,7 @@ function Main() {
     //   });
     // });
 
-    coreData.value.forEach((item) => {
+    coreData.getValue().forEach((item) => {
       const {type, color, lineWidth, shape, isActive = false} = item;
       switch(type) {
         case 'line':

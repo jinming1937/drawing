@@ -65,6 +65,7 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
           deleteData(coreData, cacheData)
           break;
         case KeyEventName.copy:
+          cacheCopyData.length = 0;
           const data = copyData(coreData, cacheCopyData);
           console.log(data.length);
           break;

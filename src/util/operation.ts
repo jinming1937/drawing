@@ -1,29 +1,6 @@
-import {CoreData} from 'src/lib';
+import {CoreData} from '../lib';
 import {IDrawData} from 'types/common';
-
-function copy<T>(obj1: T): T {
-  const obj: T = {} as T;
-  function digui<T>(origin: T, copier: T) {
-      Object.keys(origin).forEach((key) => {
-          if((obj1 as Object).hasOwnProperty(key)) {
-              // all.push(key);
-              if (typeof origin[key] === 'object') {
-                  // if(origin[key]) {}
-                  if (Array.isArray(origin[key])) {
-                    copier[key] = [].concat(origin[key]);
-                  } else {
-                    digui(origin[key], copier[key]);
-                  }
-              } else {
-                  copier[key] = origin[key];
-              }
-          }
-      })
-
-  }
-  digui(obj1, obj);
-  return obj;
-}
+import {copy} from './copy';
 
 /**
  * 后退
@@ -80,7 +57,6 @@ export function deleteData(coreData: CoreData<IDrawData>, cacheData: IDrawData[]
 }
 
 export function copyData(coreData: CoreData<IDrawData>, cacheCopyData: IDrawData[]) {
-  cacheCopyData.length = 0; // 先清空再填入数据
   coreData.getValue().forEach((item) => {
     if (item.isActive) {
       cacheCopyData.push(copy(item));
@@ -90,7 +66,6 @@ export function copyData(coreData: CoreData<IDrawData>, cacheCopyData: IDrawData
 }
 
 export function parseData(coreData: CoreData<IDrawData>, cacheCopyData: IDrawData[]) {
-  const cache = [];
   cacheCopyData.forEach((item) => {
     switch(item.type) {
       case 'pen':
@@ -111,5 +86,4 @@ export function parseData(coreData: CoreData<IDrawData>, cacheCopyData: IDrawDat
     }
     coreData.push(item);
   });
-  cacheCopyData.length = 0;
 }

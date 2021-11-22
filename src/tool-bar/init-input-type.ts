@@ -1,5 +1,5 @@
 import {getType} from '../dom/get-type';
-import {CHANGE_INPUT, IChangeInputDetail} from '../lib';
+import {CHANGE_INPUT} from '../lib';
 
 
 export function initInputType() {

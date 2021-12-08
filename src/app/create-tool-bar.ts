@@ -2,7 +2,7 @@ import {IDrawData} from "types/common";
 import {backOnceCacheData, backOnceCoreData, copyData, deleteData, KeyEventName, parseData} from '../util';
 import {CoreData, EventCenter} from "../lib";
 import {OffScreenCanvas} from "../canvas";
-import {axisTips, initRightBar, initMouseDraw, initKey} from "../dom";
+import {axisTips, initRightBar, initMouseDraw, initKey, initHelp} from "../dom";
 import {initClear, initExportPicture, initExportData, initImportJSON, initRemote, initInputType} from '../tool-bar';
 
 /**
@@ -88,6 +88,6 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
   }
   // 注册右边栏
   // initRightBar(coreData);
-
+  initHelp();
   return cacheData
 }

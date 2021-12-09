@@ -2,24 +2,14 @@
  * 气泡
 */
 
-const nameList: string[] = [];
-function getUniqueName(n: number = 0) {
-  if (nameList.indexOf(`bubble-${n}`) !== -1) {
-    return n;
-  }
-  return nameList.push(`bubble-${nameList.length}`);
-}
-
-export function bubble(content: string, position: {x: number, y: number}, trigger: 'click' | 'hover' = 'hover') {
-  // const name = getUniqueName();
-  if (document.getElementById('name')) {
+export function bubble(content: string, position: {x: number, y: number}, refName: string = '') {
+  const wrapName = `bubble-${refName}`;
+  if (document.getElementById(wrapName)) {
     return;
   }
   const div = document.createElement('div');
   div.className = 'bubble-box';
-  div.id = `name`;
-  // div.textContent = content;
-  // div.title
+  div.id = wrapName;
   div.style.position = 'absolute';
   div.style.left = `${position.x}px`;
   div.style.top = `${position.y}px`;

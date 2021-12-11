@@ -5,12 +5,12 @@ const HELP_TXT = '根据【线段、矩形、画笔、文本、箭头】画图�
 export function initHelp() {
   const help = document.getElementById('help');
   const {x, y, width} = (help as HTMLLabelElement).getBoundingClientRect();
-  const dom = bubble(HELP_TXT, { x: x - width / 2, y }, 'help') as HTMLDivElement;
+  const dom = bubble(HELP_TXT, { x: x + width / 2, y: y - 5 }, 'help') as HTMLDivElement;
   help?.addEventListener('mouseover', (e) => {
     dom.style.display = 'block';
   });
   help?.addEventListener('mouseout', (e) => {
-    dom.style.display = 'none';
+    // dom.style.display = 'none';
   });
 
   // help?.

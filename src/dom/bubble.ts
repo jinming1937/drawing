@@ -8,7 +8,7 @@ export function bubble(content: string, position: {x: number, y: number}, refNam
     return;
   }
   const div = document.createElement('div');
-  div.className = 'bubble-box';
+  div.className = 'bubble';
   div.id = wrapName;
   div.style.position = 'absolute';
   div.style.left = `${position.x}px`;
@@ -17,7 +17,7 @@ export function bubble(content: string, position: {x: number, y: number}, refNam
   contentDom.className = 'bubble-content';
   contentDom.textContent = content;
   contentDom.style.left = '-88px';
-  contentDom.style.top = '-88px';
+  contentDom.style.top = '-86px';
   const boxDom = document.createElement('div');
   boxDom.className = 'bubble-box';
   boxDom.appendChild(contentDom);

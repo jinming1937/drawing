@@ -9,8 +9,8 @@
     <canvas id="brick-app">您的浏览器居然不支持canvas元素!!!</canvas>
   </div>
   <div class="tool">
-    <button id="clear-page" class="btn" >清空</button>
-    <button id="export-picture" class="btn" >导出图片</button>
+    <button id="clear-page" class="btn" >清空|⌘+R</button>
+    <button id="export-picture" class="btn" >导出图片|⌘+S</button>
     <button id="export-data" class="btn" >导出数据</button>
     <label class="btn file-upload">
       <span class="txt">导入数据</span>
@@ -28,6 +28,7 @@
       <input type="radio" name="shape" id="txt" value="txt">
       | 箭头:
       <input type="radio" name="shape" id="arrow" value="arrow">
+      |⌘+⇧+←/→
     </label>
     <input class="color" type="color" value="#ffffff" name="color" id="color">
     <select class="select-round-rect" name="line-width" id="lineWidth" value="2">
@@ -45,10 +46,10 @@
       <option value="blue">blue</option>
       <option value="green">green</option>
     </select>
-    <select class="select-round-rect" name="remote" id="remote" value="请选择">
+    <select class="select-round-rect" name="remote" id="remote" value="请选择模板">
       <option value="">请选择模板</option>
     </select>
-    <label id="help" class="btn help" title="根据【线段、矩形、画笔、文本、箭头】画图，鼠标点击开始，松开鼠标结束，可切换颜色，线段粗细，显示隐藏坐标轴，主题色等">?</label>
+    <label id="help" class="btn help">?</label>
   </div>
 </body>
 </html>

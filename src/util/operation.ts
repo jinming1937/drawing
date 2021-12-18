@@ -27,13 +27,21 @@ export function backOnceCoreData(data: CoreData<IDrawData>, cacheData: IDrawData
  * @param {CoreData<IDrawData>} data
  * @returns
  */
-export function backOnceCacheData(cacheData: IDrawData[], data: CoreData<IDrawData>, ) {
+export function backOnceCacheData(cacheData: IDrawData[], data: CoreData<IDrawData>) {
   if (cacheData.length > 0) {
     const shape = cacheData.pop();
     if (shape) data.push(shape);
     return true;
   }
   return false;
+}
+
+export function backOperator(cacheData: IDrawData[], data: CoreData<IDrawData>) {
+
+}
+
+export function forwardOperator(cacheData: IDrawData[], data: CoreData<IDrawData>) {
+
 }
 
 /**
@@ -84,6 +92,6 @@ export function parseData(coreData: CoreData<IDrawData>, cacheCopyData: IDrawDat
         // cache.push(item);
         break;
     }
-    coreData.push(item);
+    coreData.push(copy(item));
   });
 }

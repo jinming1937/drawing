@@ -1,8 +1,8 @@
 import {IDrawData} from "types/common";
-import {backOnceCacheData, backOnceCoreData, copyData, deleteData, KeyEventName, parseData} from '../util';
+import {backOperator, forwardOperator, copyData, deleteData, KeyEventName, parseData} from '../util';
 import {CoreData, EventCenter} from "../lib";
 import {OffScreenCanvas} from "../canvas";
-import {axisTips, initRightBar, initMouseDraw, initKey} from "../dom";
+import {axisTips, initRightBar, initMouseDraw, initKey, initHelp} from "../dom";
 import {initClear, initExportPicture, initExportData, initImportJSON, initRemote, initInputType} from '../tool-bar';
 
 /**
@@ -49,12 +49,12 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
     initKey(window, (action: KeyEventName, key: '1'|'2'|'ArrowRight'|'ArrowLeft') => {
       switch(action) {
         case KeyEventName.back:
-          const state = backOnceCacheData(cacheData, coreData);
-          if(state) return;
-          backOnceCoreData(coreData, cacheData);
+          const state = backOperator(cacheData, coreData);
+          // if(state) return;
+          // backOnceCoreData(coreData, cacheData);
           break;
         case KeyEventName.forward:
-          backOnceCacheData(cacheData, coreData);
+          forwardOperator(cacheData, coreData);
           break;
         case KeyEventName.selectAll:
           coreData.getValue().forEach((item) => {
@@ -88,6 +88,8 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
   }
   // 注册右边栏
   // initRightBar(coreData);
-
+  setTimeout(() => {
+    initHelp();
+  }, 0)
   return cacheData
 }

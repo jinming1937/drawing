@@ -50,6 +50,7 @@ input {
     min-width: 45px;
     padding: 0 6px;
     height: 22px;
+    line-height: 22px;
     border-radius: 4px;
     vertical-align: top;
     cursor: pointer;
@@ -61,7 +62,6 @@ input {
   }
 
   .line, .label-btn {
-
     background-color: #e0e0e0;
     border-radius: 4px;
     color: #000;
@@ -69,6 +69,13 @@ input {
     display: inline-block;
     line-height: 22px;
     outline: none;
+  }
+
+  .line > input {
+    vertical-align: sub;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
   }
 
   .txt {
@@ -99,12 +106,17 @@ input {
     height: 22px;
     vertical-align: top;
     border-radius: 4px;
+    max-width: 100px;
+    width: 100px;
   }
 
   .help {
     height: 22px;
     line-height: 22px;
-    padding: 4px 8px;
+    padding: 0;
+    display: inline-block;
+    min-width: 22px;
+    text-align: center;
   }
 }
 
@@ -220,4 +232,34 @@ input {
       }
     }
   }
+}
+
+.bubble {
+  background-color: transparent;
+  width: 0;
+  height: 0;
+  &:after {
+    content: '';
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    border-top: #f5f5f5 11px solid;
+    border-left: transparent 11px solid;
+    border-right: transparent 11px solid;
+    border-bottom: transparent 11px solid;
+  }
+}
+
+.bubble-box {
+  position: relative;
+}
+.bubble-content {
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 12px;
+  border-radius: 4px;
+  padding: 4px;
+  width: 220px;
+  position: absolute;
+  text-align: left;
 }

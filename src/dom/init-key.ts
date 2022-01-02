@@ -54,6 +54,8 @@ export function initKey(w: Window, fn: Function) {
       fn(KeyEventName.escape);
     } else if (e.key === 'Backspace') {
       fn(KeyEventName.delete);
+    } else if (e.key === 'Tab') {
+      fn(KeyEventName.changeType, '2');
     }
   });
 }

@@ -15,7 +15,10 @@ export function bubble(content: string, position: {x: number, y: number}, refNam
   let offsetY = -85;
   if (x + defaultWidth + gap > innerWidth) {
     offsetX = innerWidth - (defaultWidth + x + gap);
+  } else if (x <= 8) {
+    offsetX = 0;
   }
+
   const div = document.createElement('div');
   div.className = 'bubble';
   div.id = wrapName;

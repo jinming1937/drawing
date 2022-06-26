@@ -85,6 +85,7 @@ const config: Configuration = {
     new HtmlWebpackPlugin({
       title: 'Math',
       filename: 'index.html',
+      minify: true,
       chunks: ['main'],
       template: path.join(__dirname, 'index.html')
     }),

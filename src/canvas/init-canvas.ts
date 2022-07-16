@@ -22,7 +22,5 @@ export function initCanvas(canvasElementId: string, width: number = 680, height:
     return [context, canvasElement]
   } else {
     throw('error: create canvas context fail!');
-    // alert('error: can not create context!!!')
-    // return [null, canvasElement]
   }
 }

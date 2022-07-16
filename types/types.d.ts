@@ -14,4 +14,5 @@ declare interface MouseEvent extends UIEvent {
 declare interface Window {
   coreData: any;
   cacheData: any;
+  isDebug: boolean;
 }

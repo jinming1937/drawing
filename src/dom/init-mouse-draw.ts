@@ -285,7 +285,7 @@ export function initMouseDraw(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas,
     canvas.addEventListener('touchcancel', (e: TouchEvent) => {
       drawing = false;
     });
-    canvas.addEventListener('drag', () => {});
+    // canvas.addEventListener('drag', () => {});
     document.body.addEventListener('touchmove', function (e) {
       e.preventDefault();
     }, {passive: false});

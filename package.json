@@ -1,5 +1,5 @@
 {
-  "name": "jm",
+  "name": "drawing",
   "version": "1.0.0",
   "description": "math",
   "main": "src/main.ts",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jinming1937/jm.git"
+    "url": "git+https://github.com/jinming1937/drawing.git"
   },
   "keywords": [
     "Math",
@@ -22,9 +22,9 @@
   "author": "jinming1937@163.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jinming1937/jm/issues"
+    "url": "https://github.com/jinming1937/drawing/issues"
   },
-  "homepage": "https://github.com/jinming1937/jm#readme",
+  "homepage": "https://github.com/jinming1937/drawing#readme",
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/plugin-proposal-class-properties": "^7.13.0",

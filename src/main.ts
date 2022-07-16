@@ -42,10 +42,11 @@ function getStrMatrix(ctx: CanvasRenderingContext2D) {
 }
 
 function Main() {
-  console.log('window load ok, start js!!!');
+  console.log('window load ready, start js!!!');
+  // window.isDebug = false;
   const themeDom = document.getElementById('theme') as HTMLInputElement;
   // 注册canvas, 离屏canvas
-  const [context, canvas, osCvs] = createApp({width: window.innerWidth, height: window.innerHeight, dpr: 2});
+  const [context, canvas, osCvs] = createApp({width: window.innerWidth, height: window.innerHeight, dpr: window.devicePixelRatio});
   // 初始化数据管理
   const coreData = new CoreData<IDrawData>();
   createToolBar(canvas, coreData, osCvs);

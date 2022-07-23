@@ -4,8 +4,8 @@ const HELP_TXT = '在【线段，矩形，画笔，文本，箭头】等输入�
 
 export function initHelp() {
   const help = document.getElementById('help');
-  const {x, y, width} = (help as HTMLLabelElement).getBoundingClientRect();
-  const dom = bubble(HELP_TXT, { x, y: y - 3 }, 'help') as HTMLDivElement;
+  const {x, y, width, height} = (help as HTMLLabelElement).getBoundingClientRect();
+  const dom = bubble(HELP_TXT, { x, y: y - 6, width, height }, 'help') as HTMLDivElement;
   help?.addEventListener('mouseover', (e) => {
     dom.style.display = 'block';
   });

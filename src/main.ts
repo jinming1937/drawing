@@ -1,8 +1,18 @@
 import {IDrawData, Pen, Txt} from 'types/common';
-import {calculateMatrix, calculate3D, cal, createMatrix, CoreData} from './lib';
+import {calculateMatrix, calculate3D, cal, createMatrix, coreData, CoreData} from './lib';
 import {createApp, createToolBar} from './app';
 import {animate} from './util';
 import {setBackground, drawLine, drawLineRect, drawPen, drawText, drawArrow} from './draw';
+
+/**
+ * TODO list
+ * 1. export coreData, 模块引用
+ * 2. coreData 内部用proxy处理list
+ * 3. 动画
+ * 4. 键盘快捷键：操作-数据 映射
+ * 5. 组件增加，注册
+ * 6. 虚拟dom：展示core data
+*/
 
 function getNumMatrix(ctx: CanvasRenderingContext2D) {
   const startLeft: [number, number] = [-300 , -100];
@@ -47,9 +57,7 @@ function Main() {
   const themeDom = document.getElementById('theme') as HTMLInputElement;
   // 注册canvas, 离屏canvas
   const [context, canvas, osCvs] = createApp({width: window.innerWidth, height: window.innerHeight, dpr: window.devicePixelRatio});
-  // 初始化数据管理
-  const coreData = new CoreData<IDrawData>();
-  createToolBar(canvas, coreData, osCvs);
+  createToolBar(canvas, osCvs);
   setBackground(context, themeDom.value); // bg
 
   // const allMatrix = getNumMatrix(context);

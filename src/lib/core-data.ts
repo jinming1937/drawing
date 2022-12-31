@@ -1,3 +1,4 @@
+import { IDrawData } from "types/common";
 
 export type IDataChangeEvent<T> = {
   target: string;
@@ -10,7 +11,7 @@ export class CoreData<T> {
   useWatcher: boolean;
   constructor() {
     this.value = [];
-    this.useWatcher = false;
+    this.useWatcher = true;
     this.dataChange = new CustomEvent<IDataChangeEvent<T>>('dataChange', {
       bubbles: false,
       cancelable: true,
@@ -82,6 +83,10 @@ export class CoreData<T> {
     return this.value[index];
   }
 
+  // public getItemById(id: number): T {
+  //   return this.value.filter(i => i.)[0];
+  // }
+
   /**
    * 更新数据，且不需要更新UI
    * @param index 索引
@@ -119,3 +124,5 @@ export class CoreData<T> {
     return value;
   }
 }
+
+export const coreData = new CoreData<IDrawData>();

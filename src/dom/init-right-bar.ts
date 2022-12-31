@@ -17,16 +17,17 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
 
   divBtn.addEventListener('click', (e: MouseEvent) => {
     if (div.className.match('show')) {
-      div.className = div.className.replace('show', '').replace(/\s/g, '');
+      div.className = div.className.replace('show', '').trim();
     } else {
       div.className += ' show';
     }
   });
 
   ul.addEventListener('click', (e: MouseEvent) => {
-    ul.querySelectorAll('li')?.forEach((i) => {
-      i.className = '';
-    });
+    // ul.querySelectorAll('li')?.forEach((i, index: number) => {
+    //   i.className = '';
+    //   coreData.getItem(index).isActive = false;
+    // });
     let flag = false;
     let deleteIndex = -1;
     let liNode: any = null;
@@ -34,6 +35,8 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
       if (i.localName === 'li' && !flag) {
         flag = true;
         i.className = 'active';
+        const index = parseInt(i.getAttribute('data-index'), 10);
+        coreData.getItem(index).isActive = true;
       }
       if (i.localName === 'div' && i.getAttribute('name') === 'delete' && liNode === null) {
         liNode = i.parentNode;
@@ -48,6 +51,7 @@ export function initRightBar(coreData: CoreData<IDrawData>) {
   });
 
   ul.addEventListener('input', (e: any) => {
+    console.log(e);
     const val = e.target.value;
     const type = e.target.getAttribute('data-type');
     const index = searchIndex(e.path);
@@ -123,7 +127,7 @@ function render(data: IDrawData[]) {
           </div>
           <div class="input-cube">
             <span>position:</span>
-            <input maxlength="30" ${draw.type === 'pen' ? 'disabled' : ''} type="text" value="${shape}" data-type="shape" />
+            <input maxlength="50" ${draw.type === 'pen' ? 'disabled' : ''} type="text" value="${shape}" data-type="shape" />
           </div>
         </div>
         <div class="delete" name="delete">×</div>

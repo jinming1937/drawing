@@ -1,5 +1,5 @@
 import {IDrawData, Pen, Txt} from 'types/common';
-import {CoreData} from '../lib';
+import {CoreData, coreData} from '../lib';
 import {bounce} from '../util';
 import {OffScreenCanvas} from '../canvas';
 import {initInputDom, showInput} from './init-input-dom';
@@ -101,7 +101,7 @@ const current_position = {
   lines: [[]] as unknown as number[][],
 };
 
-function start(coreData: CoreData<IDrawData>, osCtx: CanvasRenderingContext2D, colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
+function start(osCtx: CanvasRenderingContext2D, colorDom: HTMLInputElement, lineWidthDom: HTMLInputElement, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   const type = getType();
   const color = `${colorDom.value || '#ffffff'}`;
   const lineWidth = parseInt(lineWidthDom.value || '1', 10) || 1;
@@ -130,7 +130,7 @@ function start(coreData: CoreData<IDrawData>, osCtx: CanvasRenderingContext2D, c
   }
 }
 
-function move(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
+function move(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   // console.log('mouse move');
   const type = getType();
   const current = coreData.getItem(currentIndex);
@@ -178,7 +178,7 @@ function move(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number}
   }
 }
 
-function end(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
+function end(e: {layerX: number, layerY: number}, axisX: number, axisY: number) {
   // console.log('mouse up');
   const type = getType();
   const current = coreData.getItem(currentIndex);
@@ -221,7 +221,7 @@ function end(coreData: CoreData<IDrawData>, e: {layerX: number, layerY: number},
  * @param {String} type type line
  * @returns Fn Callback
  */
-export function initMouseDraw(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas, coreData: CoreData<IDrawData>) {
+export function initMouseDraw(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas) {
   const axisX = osCvs.width / 2;
   const axisY = osCvs.height / 2;
   const colorDom = document.getElementById('color') as HTMLInputElement;
@@ -231,17 +231,17 @@ export function initMouseDraw(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas,
   let drawing = false;
   canvas.addEventListener('mousedown', (e: MouseEvent) => {
     drawing = true;
-    start(coreData, osCvs.ctx, colorDom, lineWidthDom, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
+    start(osCvs.ctx, colorDom, lineWidthDom, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
   });
 
   canvas.addEventListener('mousemove', (e: MouseEvent) => {
     if (!drawing) return;
-    move(coreData, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
+    move({layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
   });
 
   canvas.addEventListener('mouseup', (e: MouseEvent) => {
     if (!drawing) return;
-    end(coreData, {layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
+    end({layerX: e.layerX, layerY: e.layerY}, axisX, axisY);
     drawing = false;
   });
   canvas.addEventListener('mouseleave', () => {
@@ -270,16 +270,16 @@ export function initMouseDraw(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas,
     // touch
     canvas.addEventListener('touchstart', (e: TouchEvent) => {
       drawing = true;
-      start(coreData, osCvs.ctx, colorDom, lineWidthDom, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+      start(osCvs.ctx, colorDom, lineWidthDom, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
     });
     canvas.addEventListener('touchmove', (e: TouchEvent) => {
       // console.log(e.changedTouches.length, e);
       if (!drawing) return;
-      move(coreData, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+      move({layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
     });
     canvas.addEventListener('touchend', (e: TouchEvent) => {
       if (!drawing) return;
-      end(coreData, {layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
+      end({layerX: e.changedTouches[0].clientX, layerY: e.changedTouches[0].clientY}, axisX, axisY);
       drawing = false;
     });
     canvas.addEventListener('touchcancel', (e: TouchEvent) => {

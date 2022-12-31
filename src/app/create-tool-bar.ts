@@ -1,6 +1,6 @@
 import {IDrawData} from "types/common";
 import {backOperator, forwardOperator, copyData, deleteData, KeyEventName, parseData} from '../util';
-import {CoreData, EventCenter} from "../lib";
+import {coreData, EventCenter} from "../lib";
 import {OffScreenCanvas} from "../canvas";
 import {axisTips, initRightBar, initMouseDraw, initKey, initHelp} from "../dom";
 import {initClear, initExportPicture, initExportData, initImportJSON, initRemote, initInputType} from '../tool-bar';
@@ -8,7 +8,7 @@ import {initClear, initExportPicture, initExportData, initImportJSON, initRemote
 /**
  *
  */
-export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDrawData>, osCvs: OffScreenCanvas) {
+export function createToolBar(canvas: HTMLCanvasElement, osCvs: OffScreenCanvas) {
   // 注册canvas坐标提示
   axisTips(canvas);
   // 注册绑定导出图片
@@ -42,7 +42,7 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
     cacheData.length = 0;
   });
   // 注册canvas各种事件
-  initMouseDraw(canvas, osCvs, coreData); // 绑定事件
+  initMouseDraw(canvas, osCvs); // 绑定事件
   initInputType();
   {
     // 注册键盘事件，绘画操作的前进、后退
@@ -87,7 +87,7 @@ export function createToolBar(canvas: HTMLCanvasElement, coreData: CoreData<IDra
     });
   }
   // 注册右边栏
-  // initRightBar(coreData);
+  initRightBar(coreData);
   setTimeout(() => {
     initHelp();
   }, 0)

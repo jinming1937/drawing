@@ -11,13 +11,13 @@ export function calculateMatrix(start: [number, number], arr: string[] | number[
 
   ctx.save();
   ctx.font = `italic 32px serif`;
-  arr.forEach((item) => {
+  arr.forEach((item: string | number) => {
     const text = ctx.measureText(`${item}`); // TextMetrics object
     maxStrLength = maxStrLength > text.width ? maxStrLength : text.width;
   });
   ctx.restore();
 
-  arr.forEach((item, index) => {
+  arr.forEach((item: string | number, index: number) => {
     const rowIndex = Math.floor(index / 3);
     const columnIndex = index % 3;
     const [x, y] = getIndex(start, maxStrLength, rowIndex, columnIndex);

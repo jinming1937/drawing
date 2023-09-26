@@ -21,8 +21,8 @@ export function createMatrix(start: [number, number], arr: string[][] | number[]
   ctx.restore();
 
   const matrix: {text: string; x: number; y: number;}[] = [];
-  arr.forEach((rowItems, rowIndex) => {
-    rowItems.forEach((item, columnIndex) => {
+  arr.forEach((rowItems: string[] | number[], rowIndex: number) => {
+    rowItems.forEach((item: string | number, columnIndex: number) => {
       const [x, y] = getIndex(start, maxStrLength, rowIndex, columnIndex);
       matrix.push({text: `${item}`, x, y});
     });

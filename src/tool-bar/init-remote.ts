@@ -3,7 +3,7 @@ export function initRemote(fun: (name: string) => void) {
   dom?.addEventListener('change', (e) => {
     fun(dom.value);
   });
-  const url = location.href.match('localhost') ? '' : `http://www.auoqu.com/math/modules_211013132446.json?t=${Date.now()}`;
+  const url = location.host.match('www.auoqu.com') ? `http://www.auoqu.com/math/modules_211013132446.json?t=${Date.now()}` : '';
   if (!url) return;
   window.fetch(url).then((res) => {
     return res.json();

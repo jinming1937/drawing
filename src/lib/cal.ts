@@ -22,7 +22,7 @@ export function cal(arrLeft: number[][] | string[][], arrRight: number[][] | str
       const columns = [column1[j], column2[j], column3[j]];
       let newElement = 0;
       let newElementStr = '';
-      rows.forEach((item, index) => {
+      rows.forEach((item: string | number, index: number) => {
         const c = columns[index];
         if (!onlyStr && typeof item === 'number' && typeof c === 'number') {
           newElement += item * c;

@@ -1,5 +1,13 @@
 # Drawing
 
-追求过程是痛并快乐着
+drawing board
 
-最初只是想用纯粹的JS完成一个画板功能；写着写着，就变成一个工程了
+## script
+
+```bash
+yarn install
+```
+
+```bash
+yarn dev
+```
